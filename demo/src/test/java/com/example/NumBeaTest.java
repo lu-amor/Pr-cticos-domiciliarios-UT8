@@ -1,5 +1,7 @@
 package com.example;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -44,8 +46,23 @@ public class NumBeaTest {
     }
 
     @Test
-    public void numBeamMinusOneTest(){
-        int numBea = grafo.numBea(v);
+    public void numBeaDirectConnectionTest(){
+        int numBea = grafo.numBea(v1.getEtiqueta(),v5.getEtiqueta());
+        assertEquals(1, numBea);
+
+    }
+
+    @Test
+    public void numBeaNoConnectionTest(){
+        int numBea = grafo.numBea(v3.getEtiqueta(),v5.getEtiqueta());
+        assertEquals(-1, numBea);
+
+    }
+
+    @Test
+    public void numBeaIndirectConnectionTest(){
+        int numBea = grafo.numBea(v2.getEtiqueta(),v4.getEtiqueta());
+        assertEquals(2, numBea);
 
     }
 }
