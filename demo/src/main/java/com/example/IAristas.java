@@ -1,18 +1,11 @@
 package com.example;
 
-
 import java.util.Collection;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- *
  * @author ernesto
  */
+@SuppressWarnings("rawtypes")
 public interface IAristas {
 
     /**
@@ -23,10 +16,8 @@ public interface IAristas {
      * @param etDestino
      * @return
      */
-    @SuppressWarnings("rawtypes")
-    TArista buscar(Comparable etOrigen, Comparable etDestino);
 
-    @SuppressWarnings("rawtypes")
+    TArista buscar(Comparable etOrigen, Comparable etDestino);
     boolean buscarAmbosSentidos(Comparable etOrigen, Comparable etDestino);
 
     /**
@@ -37,12 +28,8 @@ public interface IAristas {
      * @param VerticesV - Lista de vertices V
      * @return
      */
-    @SuppressWarnings("rawtypes")
     TArista buscarMin(Collection<Comparable> VerticesU, Collection<Comparable> VerticesV);
-
     String imprimirEtiquetas();
-
     void ordenar();
-    
 }
 

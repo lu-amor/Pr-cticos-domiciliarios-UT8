@@ -1,15 +1,18 @@
 package com.example;
 
-
+@SuppressWarnings("rawtypes")
 public class TAdyacencia implements IAdyacencia {
 
-    @SuppressWarnings("rawtypes")
     private Comparable etiqueta;
     private double costo;
-    @SuppressWarnings("rawtypes")
     private TVertice destino;
-    
-    @SuppressWarnings("rawtypes")
+
+    public TAdyacencia(double costo, TVertice destino) {
+        this.etiqueta = destino.getEtiqueta();
+        this.costo = costo;
+        this.destino = destino;
+    }
+
     @Override
     public Comparable getEtiqueta() {
         return etiqueta;
@@ -20,16 +23,8 @@ public class TAdyacencia implements IAdyacencia {
         return costo;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public TVertice getDestino() {
         return destino;
-    }
-
-    @SuppressWarnings("rawtypes")
-    public TAdyacencia(double costo, TVertice destino) {
-        this.etiqueta = destino.getEtiqueta();
-        this.costo = costo;
-        this.destino = destino;
     }
 }

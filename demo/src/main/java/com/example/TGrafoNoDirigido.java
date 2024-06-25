@@ -11,16 +11,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings({ "rawtypes", "unchecked", "unused"})
 public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido, IGrafoKevinBacon, IGrafoRedElectrica {
     
     protected TAristas lasAristas = new TAristas();
     //protected TVertices vertices;
+
     /**
-     *
      * @param vertices
      * @param aristas
      */
-    @SuppressWarnings("rawtypes")
     public TGrafoNoDirigido(Collection<TVertice> vertices, Collection<TArista> aristas) {
         super(vertices, aristas);     
         lasAristas.insertarAmbosSentidos(aristas);
@@ -39,7 +39,6 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
         return lasAristas;
     }
 
-    @SuppressWarnings({ "rawtypes", "unused" })
     @Override
     public TGrafoNoDirigido Prim() {
         Set<Comparable> U = new HashSet<>();
@@ -68,7 +67,6 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
         return new TGrafoNoDirigido(nuevosVertices, aristasAAM);
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public TGrafoNoDirigido Kruskal() {
         TAristas aristasAAM = new TAristas();
@@ -107,14 +105,12 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
         return new TGrafoNoDirigido(getVertices().values(), aristasAAM);
     }
 
-
     @Override
     public TAristas mejorRedElectrica() {
         Set<Comparable> U = new HashSet<>();
         Set<Comparable> V = new HashSet<>(getVertices().keySet());
         TAristas aristasAAM = new TAristas();
         double costoPrim = 0;
-
         Comparable primerVertice = V.iterator().next();
         V.remove(primerVertice);
         U.add(primerVertice);
@@ -128,21 +124,17 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
                 costoPrim += tempArista.getCosto();
             }
         }
-
         return aristasAAM;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public Collection<TVertice> bea(Comparable etiquetaOrigen) {
         this.desvisitarVertices();
         Collection<TVertice> visitados = new ArrayList<>();
         TVertice verticeOrigen = buscarVertice(etiquetaOrigen);
-    
         if (verticeOrigen != null) {
             verticeOrigen.bea(visitados);
         }
-    
         return visitados;
     }
 
@@ -150,10 +142,9 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
     @SuppressWarnings("rawtypes")
     @Override
     public Collection<TVertice> bea() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }*/
 
-    @SuppressWarnings("rawtypes")
     @Override
     public boolean conectados(TVertice v, TVertice w) {
         desvisitarVertices();
@@ -165,7 +156,6 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
         return false;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public LinkedList<TVertice> puntosArticulacion(Comparable etOrigen) {
         this.desvisitarVertices();
@@ -184,7 +174,6 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
         throw new UnsupportedOperationException("Unimplemented method 'esConexo'");
     }
 
-    @SuppressWarnings("rawtypes")
     public int numBea(String etiquetaInicio, String etiquetaObjetivo) {
         desvisitarVertices();
         TVertice verticeInicio = buscarVertice(etiquetaInicio); 
@@ -194,7 +183,6 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
         return -1;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public Set<TVertice> obtenerVerticesConMaxEnlaces(String verticeInicio, int maxEnlaces) { // listarContactos parcial 2018 (Kevin Bacon)
         if (!getVertices().containsKey(verticeInicio)) {
@@ -206,7 +194,6 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
         return vertice.buscarMaxEnlacesDesdeVertice(maxEnlaces, visitados);
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public List<Map.Entry<TVertice, Integer>> obtenerDistanciasDesdeVertice(String etiquetaVertice) { // listarContactos 2020 (Caso  COVID)
         TVertice vertice = buscarVertice(etiquetaVertice);
         if (vertice != null) {

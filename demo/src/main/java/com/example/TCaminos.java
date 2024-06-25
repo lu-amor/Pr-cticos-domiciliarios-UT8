@@ -4,13 +4,11 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 /**
- *
  * @author diego
  */
 public class TCaminos {
     
-    private final Collection<TCamino> caminos;
-    // caminos no estaba puesto como final
+    private final Collection<TCamino> caminos; // caminos no estaba puesto como final
 
     public TCaminos() {
         this.caminos = new LinkedList<>();
@@ -34,7 +32,6 @@ public class TCaminos {
     }
     
     public int costoMin() { // no estaba seteada la visibilidad
-        
         int costoMenor = Integer.MAX_VALUE;
         int tempCosto;
         for (TCamino elcamino:caminos){
@@ -43,5 +40,4 @@ public class TCaminos {
         }
         return costoMenor;
     }
-    
 }

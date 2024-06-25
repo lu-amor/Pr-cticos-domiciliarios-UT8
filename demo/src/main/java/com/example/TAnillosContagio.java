@@ -3,8 +3,6 @@ package com.example;
 import java.util.HashMap;
 import java.util.TreeSet;
 
-
-
 public class TAnillosContagio extends HashMap<Integer, TreeSet<String>> {
 
     public void agregarContagio(int distancia, String nombrePersona){

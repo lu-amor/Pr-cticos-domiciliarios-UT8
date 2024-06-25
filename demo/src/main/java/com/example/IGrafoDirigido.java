@@ -1,31 +1,23 @@
 package com.example;
 
-
 import java.util.Collection;
 import java.util.Map;
 
+@SuppressWarnings("rawtypes")
 public interface IGrafoDirigido {
 
-    @SuppressWarnings("rawtypes")
     Collection<TVertice> bpf();
-    @SuppressWarnings("rawtypes")
     Collection <TVertice> bea();
-    @SuppressWarnings("rawtypes")
     Collection<TVertice> bpf(TVertice vertice);
-
-    @SuppressWarnings("rawtypes")
     Collection<TVertice> bpf(Comparable etiquetaOrigen);
 
     /*Collection<Comparable> bpf();
-
     Collection<Comparable> bpf(TVertice vertice);
-
     Collection<Comparable> bpf(Comparable etiquetaOrigen);*/
 
     /**
      * @return Etiqueta del centro del grafo
      */
-    @SuppressWarnings("rawtypes")
     Comparable centroDelGrafo();
 
     /**
@@ -33,7 +25,6 @@ public interface IGrafoDirigido {
      * caso de no existir la arista, retorna falso. En caso de que las etiquetas
      * sean invalidas (no existe el vertice origen o el destino), retorna falso.
      */
-    @SuppressWarnings("rawtypes")
     boolean eliminarArista(Comparable nomVerticeOrigen, Comparable nomVerticeDestino);
 
     /**
@@ -42,7 +33,6 @@ public interface IGrafoDirigido {
      * invalida, retorna false.
      *
      */
-    @SuppressWarnings("rawtypes")
     boolean eliminarVertice(Comparable nombreVertice);
 
     /**
@@ -52,12 +42,11 @@ public interface IGrafoDirigido {
      *
      * @return True si existe la arista, false en caso contrario
      */
-    @SuppressWarnings("rawtypes")
     boolean existeArista(Comparable etiquetaOrigen, Comparable etiquetaDestino);
 
     /**
      * Metodo encargado de verificar la existencia de un vertice dentro del
-     * grafo.-
+     * grafo.
      *
      * La etiqueta especificada como parametro debe ser valida.
      *
@@ -65,7 +54,6 @@ public interface IGrafoDirigido {
      * @return True si existe el vertice con la etiqueta indicada, false en caso
      * contrario
      */
-    @SuppressWarnings("rawtypes")
     boolean existeVertice(Comparable unaEtiqueta);
 
     /**
@@ -78,7 +66,7 @@ public interface IGrafoDirigido {
     Double[][] floyd();
 
     /**
-     * Metododouble encargado de insertar una arista en el grafo (con un cierto
+     * Metodo encargado de insertar una arista en el grafo (con un cierto
      * costo), dado su vertice origen y destino.- Para que la arista sea valida,
      * se deben cumplir los siguientes casos: 1) Las etiquetas pasadas por
      * parametros son validas.- 2) Los vertices (origen y destino) existen
@@ -94,17 +82,13 @@ public interface IGrafoDirigido {
 
     /**
      * Metodo encargado de insertar un vertice en el grafo.
-     *
      * No pueden ingresarse vertices con la misma etiqueta. La etiqueta
      * especificada como parametro debe ser valida.
      *
      * @param unaEtiqueta Etiqueta del vertice a ingresar.
      * @return True si se pudo insertar el vertice, false en caso contrario
      */
-    @SuppressWarnings("rawtypes")
     boolean insertarVertice(TVertice vertice);
-
-    @SuppressWarnings("rawtypes")
     Comparable obtenerExcentricidad(Comparable etiquetaVertice);
 
     /**
@@ -116,21 +100,10 @@ public interface IGrafoDirigido {
      * par de vértices.
      */
     boolean[][] warshall();
-
-    @SuppressWarnings("rawtypes")
     public Map<Comparable, TVertice> getVertices();
-
-
     public void desvisitarVertices();
-
-    @SuppressWarnings("rawtypes")
     public TCaminos todosLosCaminos(Comparable etiquetaOrigen, Comparable etiquetaDestino);
-
     public boolean tieneCiclo(TCamino camino);
-
-    @SuppressWarnings("rawtypes")
     public boolean tieneCiclo(Comparable etiquetaOrigen);
-
     public boolean tieneCiclo();
-
 }

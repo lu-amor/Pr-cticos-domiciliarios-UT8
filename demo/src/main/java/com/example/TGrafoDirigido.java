@@ -7,20 +7,17 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class TGrafoDirigido  implements IGrafoDirigido {
 
-    @SuppressWarnings("rawtypes")
     private final Map<Comparable, TVertice> vertices; //lista de vertices del grafo.-
     private final TAristas aristas;
-    
 
-    @SuppressWarnings("rawtypes")
     public TGrafoDirigido(Collection<TVertice> vertices, Collection<TArista> aristas) {
         this.vertices = new HashMap<>();
         for (TVertice vertice : vertices) {
             insertarVertice(vertice.getEtiqueta()); // metodo que no fue dado como privado
         }
-        
         this.aristas = new TAristas();
         for (TArista arista : aristas) {
             insertarArista(arista); 
@@ -36,7 +33,6 @@ public class TGrafoDirigido  implements IGrafoDirigido {
      * @param nomVerticeDestino
      * @return
      */
-    @SuppressWarnings("rawtypes")
     @Override
     public boolean eliminarArista(Comparable nomVerticeOrigen, Comparable nomVerticeDestino) {
         if ((nomVerticeOrigen != null) && (nomVerticeDestino != null)) {
@@ -56,7 +52,6 @@ public class TGrafoDirigido  implements IGrafoDirigido {
      * @param nombreVertice
      * @return
      */
-    @SuppressWarnings("rawtypes")
     @Override
     public boolean eliminarVertice(Comparable nombreVertice) {
         if (nombreVertice != null) {
@@ -74,7 +69,6 @@ public class TGrafoDirigido  implements IGrafoDirigido {
      * @param etiquetaDestino
      * @return True si existe la adyacencia, false en caso contrario
      */
-    @SuppressWarnings("rawtypes")
     @Override
     public boolean existeArista(Comparable etiquetaOrigen, Comparable etiquetaDestino) {
         TVertice vertOrigen = buscarVertice(etiquetaOrigen);
@@ -95,7 +89,6 @@ public class TGrafoDirigido  implements IGrafoDirigido {
      * @return True si existe el vertice con la etiqueta indicada, false en caso
      * contrario
      */
-    @SuppressWarnings("rawtypes")
     @Override
     public boolean existeVertice(Comparable unaEtiqueta) {
         return getVertices().get(unaEtiqueta) != null;
@@ -109,7 +102,6 @@ public class TGrafoDirigido  implements IGrafoDirigido {
      * @param unaEtiqueta Etiqueta del v�rtice a buscar.-
      * @return El vertice encontrado. En caso de no existir, retorna nulo.
      */
-    @SuppressWarnings("rawtypes")
     protected TVertice buscarVertice(Comparable unaEtiqueta) {
         return getVertices().get(unaEtiqueta);
     }
@@ -126,7 +118,6 @@ public class TGrafoDirigido  implements IGrafoDirigido {
      * @param arista
      * @return True si se pudo insertar la adyacencia, false en caso contrario
      */
-    @SuppressWarnings("rawtypes")
     @Override
     public boolean insertarArista(TArista arista) {
         boolean tempbool = false;
@@ -138,7 +129,6 @@ public class TGrafoDirigido  implements IGrafoDirigido {
                 aristas.getLasAristas().add(arista);
                 return vertOrigen.insertarAdyacencia(arista.getCosto(), vertDestino);
             }
-
         }
         return false;
     }
@@ -152,7 +142,6 @@ public class TGrafoDirigido  implements IGrafoDirigido {
      * @param unaEtiqueta Etiqueta del v�rtice a ingresar.
      * @return True si se pudo insertar el vertice, false en caso contrario
      */
-    @SuppressWarnings("rawtypes")
     public boolean insertarVertice(Comparable unaEtiqueta) {
         if ((unaEtiqueta != null) && (!existeVertice(unaEtiqueta))) {
             TVertice vert = new TVertice(unaEtiqueta);
@@ -162,7 +151,6 @@ public class TGrafoDirigido  implements IGrafoDirigido {
         return false;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public boolean insertarVertice(TVertice vertice) {
         Comparable unaEtiqueta = vertice.getEtiqueta();
@@ -173,14 +161,11 @@ public class TGrafoDirigido  implements IGrafoDirigido {
         return false;
     }
 
-
-    @SuppressWarnings("rawtypes")
     public Object[] getEtiquetasOrdenado() {
         TreeMap<Comparable, TVertice> mapOrdenado = new TreeMap<>(this.getVertices());
         return mapOrdenado.keySet().toArray();
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public void desvisitarVertices() {
         for (TVertice vertice : vertices.values()) {
@@ -196,15 +181,11 @@ public class TGrafoDirigido  implements IGrafoDirigido {
     /**
      * @return the vertices
      */
-    @SuppressWarnings("rawtypes")
     @Override
     public Map<Comparable, TVertice> getVertices() {
         return vertices;
     }
 
-
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public Collection<TVertice> bpf(TVertice vertice) {
         desvisitarVertices();
@@ -215,20 +196,18 @@ public class TGrafoDirigido  implements IGrafoDirigido {
         return visitados;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public Collection<TVertice> bpf() {
         desvisitarVertices();
         Collection<TVertice> visitados = new ArrayList<>();
         for (TVertice vertice : vertices.values()) {
-        if (!vertice.getVisitado()) {
-            vertice.bpf(visitados);
+            if (!vertice.getVisitado()) {
+                vertice.bpf(visitados);
+            }
         }
-    }
-    return visitados;
+        return visitados;
     }
 
-    @SuppressWarnings({ "rawtypes"})
     @Override
     public Collection<TVertice> bpf(Comparable etiquetaOrigen) {
         desvisitarVertices();
@@ -243,7 +222,6 @@ public class TGrafoDirigido  implements IGrafoDirigido {
         return visitados; // Devolver una lista vacía si no se encuentra el vértice
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public Comparable centroDelGrafo() {
         // Inicializar la excentricidad mínima con el valor más alto posible
@@ -275,25 +253,23 @@ public class TGrafoDirigido  implements IGrafoDirigido {
         int cantidadVertices = vertices.size();
         Integer [][] predecesores = new Integer[cantidadVertices][cantidadVertices];
 
-    // Algoritmo de Floyd
-    for (int k = 0; k < cantidadVertices; k++) {
-        for (int i = 0; i < cantidadVertices; i++) {
-            /*if (A[i][k] == Double.POSITIVE_INFINITY) {
-                continue; // Cortocircuito si no hay conexión directa i -> k
-            }*/
-            for (int j = 0; j < cantidadVertices; j++) {
-                if (matrizDistancias[i][k] != null && matrizDistancias[k][j] != null && matrizDistancias[i][j] != null && matrizDistancias[i][k] + matrizDistancias[k][j] < matrizDistancias[i][j]) {
-                    matrizDistancias[i][j] = matrizDistancias[i][k] + matrizDistancias[k][j]; // Actualizar distancia
-                    predecesores[i][j] = k; // Actualizar predecesor
+        // Algoritmo de Floyd
+        for (int k = 0; k < cantidadVertices; k++) {
+            for (int i = 0; i < cantidadVertices; i++) {
+                /*if (A[i][k] == Double.POSITIVE_INFINITY) {
+                    continue; // Cortocircuito si no hay conexión directa i -> k
+                }*/
+                for (int j = 0; j < cantidadVertices; j++) {
+                    if (matrizDistancias[i][k] != null && matrizDistancias[k][j] != null && matrizDistancias[i][j] != null && matrizDistancias[i][k] + matrizDistancias[k][j] < matrizDistancias[i][j]) {
+                        matrizDistancias[i][j] = matrizDistancias[i][k] + matrizDistancias[k][j]; // Actualizar distancia
+                        predecesores[i][j] = k; // Actualizar predecesor
+                    }
                 }
             }
         }
+        return matrizDistancias;
     }
 
-    return matrizDistancias;
-    }
-
-    @SuppressWarnings("rawtypes")
     @Override
     public Comparable obtenerExcentricidad(Comparable etiquetaVertice) {
         // Ejecutar el algoritmo de Floyd-Warshall para obtener la matriz de distancias
@@ -369,7 +345,6 @@ public class TGrafoDirigido  implements IGrafoDirigido {
         return alcance; // Devuelve la matriz `alcance` que ahora indica si existe un camino entre cualquier par de vértices del grafo.
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public TCaminos todosLosCaminos(Comparable etiquetaOrigen, Comparable etiquetaDestino) {
         desvisitarVertices();
@@ -383,7 +358,6 @@ public class TGrafoDirigido  implements IGrafoDirigido {
         return null;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public boolean tieneCiclo(Comparable etiquetaOrigen) {
         desvisitarVertices();
@@ -394,7 +368,6 @@ public class TGrafoDirigido  implements IGrafoDirigido {
         return false;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public boolean tieneCiclo() {
         desvisitarVertices();
@@ -406,10 +379,8 @@ public class TGrafoDirigido  implements IGrafoDirigido {
             }
         }
         return false;
-
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public boolean tieneCiclo(TCamino camino) {
         desvisitarVertices();
@@ -424,7 +395,6 @@ public class TGrafoDirigido  implements IGrafoDirigido {
         return false;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public Collection<TVertice> bea() {
         this.desvisitarVertices();

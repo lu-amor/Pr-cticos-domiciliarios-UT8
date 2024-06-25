@@ -8,10 +8,9 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContagio {
 
-    @SuppressWarnings("rawtypes")
     private final Comparable etiqueta; // etiqueta no era final
     private final LinkedList<TAdyacencia> adyacentes; //adyacentes no era final
     private boolean visitado;
@@ -20,10 +19,18 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
     private int tiempoFinalización; // tiempo en que recorre todas las adyacencias del vertice
     private int numeroBajo;
     private int numBea;
-    @SuppressWarnings("rawtypes")
     private TVertice predecesor;
 
-    @SuppressWarnings("rawtypes")
+    public TVertice(Comparable unaEtiqueta) {
+        this.etiqueta = unaEtiqueta;
+        adyacentes = new LinkedList();
+        visitado = false;
+        numeroBp = -1;
+        numeroBajo = -1;
+        tiempoFinalización = -1;
+        numBea = -1;
+    }
+
     public Comparable getEtiqueta() {
         return etiqueta;
     }
@@ -58,7 +65,6 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
     /**
      * @return the predecesor
      */
-    @SuppressWarnings("rawtypes")
     public TVertice getPredecesor() {
         return predecesor;
     }
@@ -66,7 +72,6 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
     /**
      * @param predecesor the predecesor to set
      */
-    @SuppressWarnings("rawtypes")
     public void setPredecesor(TVertice predecesor) {
         this.predecesor = predecesor;
     }
@@ -127,19 +132,6 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         this.numeroBp = numBajo;
     }
 
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    public TVertice(Comparable unaEtiqueta) {
-        this.etiqueta = unaEtiqueta;
-        adyacentes = new LinkedList();
-        visitado = false;
-        numeroBp = -1;
-        numeroBajo = -1;
-        tiempoFinalización = -1;
-        numBea = -1;
-    }
-
-    @SuppressWarnings("rawtypes")
     @Override
     public TAdyacencia buscarAdyacencia(TVertice verticeDestino) {
         if (verticeDestino != null) {
@@ -148,7 +140,6 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         return null;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public Double obtenerCostoAdyacencia(TVertice verticeDestino) {
         TAdyacencia ady = buscarAdyacencia(verticeDestino);
@@ -158,7 +149,6 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         return Double.MAX_VALUE;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public boolean insertarAdyacencia(Double costo, TVertice verticeDestino) {
         if (buscarAdyacencia(verticeDestino) == null) {
@@ -168,7 +158,6 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         return false;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public boolean eliminarAdyacencia(Comparable nomVerticeDestino) {
         TAdyacencia ady = buscarAdyacencia(nomVerticeDestino);
@@ -179,7 +168,6 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         return false;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public TVertice primerAdyacente() {
         if (this.adyacentes.getFirst() != null) {
@@ -188,8 +176,6 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         return null;
     }
 
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public TAdyacencia buscarAdyacencia(Comparable etiquetaDestino) {
         for (TAdyacencia adyacencia : adyacentes) {
@@ -200,8 +186,6 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         return null;
     }
 
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void bpf(Collection<TVertice> visitados) {
         setVisitado(true);
@@ -214,7 +198,6 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         }
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public TCaminos todosLosCaminos(Comparable etVertDest, TCamino caminoPrevio, TCaminos todosLosCaminos) {
         this.setVisitado(true);
@@ -241,8 +224,6 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         return todosLosCaminos;
     }
 
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public void bea(Collection<TVertice> visitados) {
         setVisitado(true);
@@ -255,7 +236,6 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         }
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public TVertice siguienteAdyacente(TVertice w) {
         TAdyacencia adyacente = buscarAdyacencia(w.getEtiqueta());
@@ -266,7 +246,6 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         return null;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public boolean tieneCiclo(LinkedList<Comparable> camino) {
         this.setVisitado(true);
@@ -285,13 +264,10 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         return false;
     }
 
-    @SuppressWarnings({ "rawtypes"})
     public boolean tieneCiclo(TCamino camino) {
         setVisitado(true);
 
-        Collection<Comparable> otrosVertices = camino.getOtrosVertices();
-
-    
+        Collection<Comparable> otrosVertices = camino.getOtrosVertices();    
         otrosVertices.add(getEtiqueta());
         //camino.setOtrosVertices(otrosVertices);
     
@@ -315,18 +291,14 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         return false;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public boolean conectadoCon(TVertice destino) {
         setVisitado(true);
-        
         if(getEtiqueta().equals(destino.getEtiqueta())) {
             return true;
         }
-
         for (TAdyacencia adyacencia: getAdyacentes()){
             TVertice verticeAdyacente = adyacencia.getDestino();
-
             if (!verticeAdyacente.getVisitado()){
                 if (verticeAdyacente.conectadoCon(destino)) {
                     return true;
@@ -336,7 +308,6 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         return false;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     public void puntosArticulacion(LinkedList<TVertice> puntos, int[] cont) {
         cont[0]++;
         this.numeroBp = cont[0];
@@ -365,15 +336,12 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         }
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public int numBea(String etiquetaObjetivo) {
         if (this.getEtiqueta().equals(etiquetaObjetivo)) {
             return 0;
         }
-        
         Queue<TVertice> cola = new LinkedList<>();
         Queue<Integer> grados = new LinkedList<>();
-        
         cola.add(this);
         grados.add(0);
         setVisitado(true);
@@ -381,7 +349,6 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         while (!cola.isEmpty()) {
             TVertice actual = cola.poll();
             int gradoActual = grados.poll();
-            
             for (TAdyacencia adyacente : (LinkedList<TAdyacencia>) actual.getAdyacentes()) {
                 TVertice verticeAdyacente = adyacente.getDestino();
                 if (!verticeAdyacente.getVisitado()) {
@@ -397,13 +364,11 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         return -1;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
     public Set<TVertice> buscarMaxEnlacesDesdeVertice(int maxEnlaces, Set<TVertice> visitados) { // listarContactos 2018
         Set<TVertice> resultado = new HashSet<>();
         Queue<TVertice> cola = new LinkedList<>();
         Queue<Integer> niveles = new LinkedList<>();
-
         cola.offer(this);
         niveles.offer(0);
         visitados.add(this);
@@ -411,13 +376,11 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         while (!cola.isEmpty()) {
             TVertice actual = cola.poll();
             int nivelActual = niveles.poll();
-
             if (nivelActual <= maxEnlaces) {
                 resultado.add(actual);
             } else {
                 break;
             }
-
             for (TAdyacencia adyacente : (LinkedList<TAdyacencia>) actual.adyacentes) {
                 TVertice verticeAdyacente = adyacente.getDestino();
                 if (!visitados.contains(verticeAdyacente)) {
@@ -430,7 +393,6 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         return resultado;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     public Map<TVertice, Integer> obtenerDistancias() { // listarContactos 2020 (Caso COVID)
         Map<TVertice, Integer> distancias = new HashMap<>();
         Queue<TVertice> cola = new LinkedList<>();
@@ -460,9 +422,6 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
 
     @Override
     public void obtenerAnillos(TAnillosContagio losAnillos, int maxDistancia) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'obtenerAnillos'");
     }
-
-
 }

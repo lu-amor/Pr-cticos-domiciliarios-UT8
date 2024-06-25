@@ -1,11 +1,11 @@
 package com.example;
 
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 
+@SuppressWarnings("rawtypes")
 public class TAristas extends LinkedList<TArista> {
 
     private final static String SEPARADOR_ELEMENTOS_IMPRESOS = "-";
@@ -20,14 +20,12 @@ public class TAristas extends LinkedList<TArista> {
      * @param etDestino
      * @return
      */
-    @SuppressWarnings({ "rawtypes"})
     public TArista buscar(Comparable etOrigen, Comparable etDestino) {
         for (TArista arista : this) {
             if ((arista.getEtiquetaOrigen().equals(etOrigen)) && arista.getEtiquetaDestino().equals(etDestino)) {
                 return arista;
             }
         }
-
         return null;
     }
 
@@ -39,12 +37,10 @@ public class TAristas extends LinkedList<TArista> {
      * @param VerticesV - Lista de vertices V
      * @return
      */
-    @SuppressWarnings("rawtypes")
     public TArista buscarMin(Collection<Comparable> VerticesU, Collection<Comparable> VerticesV) {
         TArista tempArista;
         TArista tAMin = null;
         Double costoMin = Double.POSITIVE_INFINITY;
-
         for (Comparable u : VerticesU) {
             for (Comparable v : VerticesV) {
                 tempArista = buscar(u, v);
@@ -62,8 +58,6 @@ public class TAristas extends LinkedList<TArista> {
             return null;
         }
         StringBuilder salida = new StringBuilder();
-        //TODO: Completar codigo que imprime todas las aristas de la lista en el siguiente formato:
-        //ORIGEN - DESTINO - COSTO
         for (TArista arista : this) {
             salida.append(arista.getEtiquetaOrigen())
                 .append(" ")
@@ -114,7 +108,6 @@ public class TAristas extends LinkedList<TArista> {
         for (TArista arista : aristasOrdenadas) {
             aristasArray[index++] = arista.getEtiquetaOrigen() + " - " + arista.getEtiquetaDestino() + " - " + arista.getCosto();
         }
-        
         return aristasArray;
     }
 }

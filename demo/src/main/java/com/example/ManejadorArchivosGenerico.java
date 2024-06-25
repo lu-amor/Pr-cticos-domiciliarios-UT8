@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class ManejadorArchivosGenerico {
-
     /**
      * @param nombreCompletoArchivo
      * @param listaLineasArchivo lista con las lineas del archivo
@@ -64,7 +63,6 @@ public class ManejadorArchivosGenerico {
             e.printStackTrace();
         }
 //		System.out.println("Archivo leido satisfactoriamente");
-
         return listaLineasArchivo.toArray(new String[0]);
     }
 }
