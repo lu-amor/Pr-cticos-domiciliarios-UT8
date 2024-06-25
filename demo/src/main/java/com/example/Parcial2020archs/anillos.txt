@@ -1,0 +1,29 @@
+DISTANCIA de CONTACTO: 1:
+  Anthony_Daniels
+  Carrie_Fisher
+  Harrison_Ford
+  Peter_Cushing
+DISTANCIA de CONTACTO: 2:
+  Bruce_Willis
+  Cate_Blanchett
+  Elijah_Wood
+  Gary_Sinise
+  Geoffrey_Rush
+  Keira_Knightley
+  Mykelti_Williamson
+  Orlando_Bloom
+  Sally_Field
+  Tom_Hanks
+  Viggo_Mortensen
+DISTANCIA de CONTACTO: 3:
+  Brad_Pitt
+  Melora_Hardin
+  Robert_Niro
+DISTANCIA de CONTACTO: 4:
+  Michael_Peppa
+  Tom_Cruise
+DISTANCIA de CONTACTO: 5:
+  Carrie-Anne_Moss
+  Lukas_Haas
+DISTANCIA de CONTACTO: 6:
+  Djimon_Hounsou

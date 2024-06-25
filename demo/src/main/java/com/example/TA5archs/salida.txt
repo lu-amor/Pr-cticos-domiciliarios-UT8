@@ -1,0 +1,5 @@
+Distancia de Uma_Thurman a Kevin_Bacon: 4
+Distancia de Tom_Cruise a Kevin_Bacon: 4
+Distancia de Jason_Statham a Kevin_Bacon: 4
+Distancia de Lukas_Haas a Kevin_Bacon: 5
+Distancia de Dijimon_Hounsou a Kevin_Bacon: -1
