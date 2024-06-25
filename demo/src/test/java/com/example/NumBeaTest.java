@@ -45,7 +45,7 @@ public class NumBeaTest {
 
     @Test
     public void numBeamMinusOneTest(){
-        int numBea = grafo.numBea(v);
+        int numBea = grafo.numBea(v1.getEtiqueta(),v5.getEtiqueta()) ;
 
     }
 }

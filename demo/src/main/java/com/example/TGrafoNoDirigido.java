@@ -181,7 +181,7 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
         return visitados;
     }
 
-    public int numBea(String etiquetaInicio, String etiquetaObjetivo) {
+    public int numBea(Comparable etiquetaInicio, Comparable etiquetaObjetivo) {
         desvisitarVertices();
         TVertice verticeInicio = buscarVertice(etiquetaInicio); 
         if (verticeInicio != null) {

@@ -336,7 +336,7 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         }
     }
 
-    public int numBea(String etiquetaObjetivo) {
+    public int numBea(Comparable etiquetaObjetivo) {
         if (this.getEtiqueta().equals(etiquetaObjetivo)) {
             return 0;
         }

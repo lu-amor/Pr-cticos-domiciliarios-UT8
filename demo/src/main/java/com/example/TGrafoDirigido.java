@@ -306,7 +306,6 @@ public class TGrafoDirigido  implements IGrafoDirigido {
         return excentricidad;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public boolean[][] warshall() {
         int n = vertices.size(); // Se obtiene el número de vértices en el grafo (`n`).
