@@ -24,7 +24,6 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
     public TGrafoNoDirigido(Collection<TVertice> vertices, Collection<TArista> aristas) {
         super(vertices, aristas);     
         lasAristas.insertarAmbosSentidos(aristas);
-    
     }
 
     @Override
@@ -170,8 +169,16 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
 
     @Override
     public boolean esConexo() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'esConexo'");
+        Collection<TVertice> visitados = bpf();
+        return visitados.size() == getVertices().size();
+    }
+
+    public Collection<TVertice> bpfNoCompleto() {
+        desvisitarVertices();
+        Collection<TVertice> visitados = new ArrayList<>();
+        TVertice vertice = getVertices().values().iterator().next();
+        vertice.bpf(visitados);
+        return visitados;
     }
 
     public int numBea(String etiquetaInicio, String etiquetaObjetivo) {
