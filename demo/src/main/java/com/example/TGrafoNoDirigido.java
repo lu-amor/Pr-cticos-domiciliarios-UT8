@@ -217,32 +217,32 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
     @Override
     public TCamino caminoCritico() {
         // TODO Auto-generated method stub
-        return UnsupportedOperationException;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public TCaminos obtenerCaminosNoCriticos() {
         // TODO Auto-generated method stub
-        return UnsupportedOperationException;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void clasificarArcos(TVertice verticeOrigen, ListaArcos arcosArbol, ListaArcos arcosRetroceso,
             ListaArcos arcosAvance, ListaArcos arcosCruzados) {
         // TODO Auto-generated method stub
-        return UnsupportedOperationException;
+        throw new UnsupportedOperationException();
         
     }
 
     @Override
     public boolean esFuertementeConexo() {
         // TODO Auto-generated method stub
-        return UnsupportedOperationException;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public TCaminos obtenerComponentesFuertementeConectados() {
         // TODO Auto-generated method stub
-        return UnsupportedOperationException;
+        throw new UnsupportedOperationException();
     }
 }
