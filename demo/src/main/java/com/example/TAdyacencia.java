@@ -27,4 +27,8 @@ public class TAdyacencia implements IAdyacencia {
     public TVertice getDestino() {
         return destino;
     }
+
+    /*public void setCostoCasoEspecial(double costo){
+        this.costo = costo;
+    }*/
 }

@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.Stack;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContagio {
@@ -15,10 +16,10 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
     private final LinkedList<TAdyacencia> adyacentes; //adyacentes no era final
     private boolean visitado;
     private T datos;
-    private int numeroBp;
-    private int tiempoFinalización; // tiempo en que recorre todas las adyacencias del vertice
+    private int numeroBp; // Tiempo de descubrimiento en la DFS
+    private int tiempoFinalización; // Tiempo en que recorre todas las adyacencias del vertice
     private int numeroBajo;
-    private int numBea;
+    private int numBea; // Tiempo de descubrimiento en la busqueda por amplitud
     private TVertice predecesor;
 
     public TVertice(Comparable unaEtiqueta) {
@@ -31,35 +32,56 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         numBea = -1;
     }
 
+    /**
+     * @return the vertex key
+     */
     public Comparable getEtiqueta() {
         return etiqueta;
     }
 
+    /**
+     * @return the adyacents
+     */
     @Override
     public LinkedList<TAdyacencia> getAdyacentes() {
         return adyacentes;
     }
 
+    /**
+     * @return the data stored in this vertex
+     */
     public T getDatos() {
         return datos;
     }
 
-    public void setVisitado(boolean valor) {
-        this.visitado = valor;
+    /**
+     * @param value the value (true or false) to set with the purpose of indicate if the vertex was visited or not
+     */
+    public void setVisitado(boolean value) {
+        this.visitado = value;
     }
 
+    /**
+     * @return the visited flag
+     */
     public boolean getVisitado() {
         return this.visitado;
     }
 
+    /**
+     * @return the bea number
+     */
     @Override
     public int getBacon() {
         return this.numBea;
     }
 
+    /**
+     * @param numBacon the bacon number to set
+     */
     @Override
-    public void setBacon(int newBacon) {
-        this.numBea = newBacon;
+    public void setBacon(int numBacon) {
+        this.numBea = numBacon;
     }
 
     /**
@@ -133,6 +155,16 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
     }
 
     @Override
+    public TAdyacencia buscarAdyacencia(Comparable etiquetaDestino) {
+        for (TAdyacencia adyacencia : adyacentes) {
+            if (adyacencia.getDestino().getEtiqueta().compareTo(etiquetaDestino) == 0) {
+                return adyacencia;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public TAdyacencia buscarAdyacencia(TVertice verticeDestino) {
         if (verticeDestino != null) {
             return buscarAdyacencia(verticeDestino.getEtiqueta());
@@ -177,11 +209,11 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
     }
 
     @Override
-    public TAdyacencia buscarAdyacencia(Comparable etiquetaDestino) {
-        for (TAdyacencia adyacencia : adyacentes) {
-            if (adyacencia.getDestino().getEtiqueta().compareTo(etiquetaDestino) == 0) {
-                return adyacencia;
-            }
+    public TVertice siguienteAdyacente(TVertice w) {
+        TAdyacencia adyacente = buscarAdyacencia(w.getEtiqueta());
+        int index = adyacentes.indexOf(adyacente);
+        if (index + 1 < adyacentes.size()) {
+            return adyacentes.get(index + 1).getDestino();
         }
         return null;
     }
@@ -194,6 +226,18 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
             TVertice vertAdy = adyacente.getDestino();
             if (!vertAdy.getVisitado()) {
                 vertAdy.bpf(visitados);
+            }
+        }
+    }
+
+    @Override
+    public void bea(Collection<TVertice> visitados) {
+        setVisitado(true);
+        visitados.add(this);
+        for (TAdyacencia adyacente : this.getAdyacentes()) {
+            TVertice verticeAdyacente = adyacente.getDestino();
+            if (!visitados.contains(verticeAdyacente)) {
+                verticeAdyacente.bea(visitados);
             }
         }
     }
@@ -224,27 +268,32 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         return todosLosCaminos;
     }
 
-    @Override
-    public void bea(Collection<TVertice> visitados) {
-        setVisitado(true);
-        visitados.add(this);
-        for (TAdyacencia adyacente : this.getAdyacentes()) {
-            TVertice verticeAdyacente = adyacente.getDestino();
-            if (!visitados.contains(verticeAdyacente)) {
-                verticeAdyacente.bea(visitados);
-            }
-        }
-    }
+    /*@SuppressWarnings({ "rawtypes", "unchecked" })
+    public TCaminos todosLosCaminosCasoEspecial(Comparable etVertDest, TCamino caminoPrevio, TCaminos todosLosCaminos, double contador) {
+        this.setVisitado(true); 
+        for (TAdyacencia adyacencia : this.getAdyacentes()) { 
+            TVertice destino = adyacencia.getDestino(); 
 
-    @Override
-    public TVertice siguienteAdyacente(TVertice w) {
-        TAdyacencia adyacente = buscarAdyacencia(w.getEtiqueta());
-        int index = adyacentes.indexOf(adyacente);
-        if (index + 1 < adyacentes.size()) {
-            return adyacentes.get(index + 1).getDestino();
-        }
-        return null;
-    }
+            if (!destino.getVisitado()) { 
+                // No necesitamos establecer el costo en cada adyacencia,
+                // simplemente contamos el número de vértices recorridos menos uno
+
+                if (destino.getEtiqueta().compareTo(etVertDest) == 0) { 
+                    TCamino copia = caminoPrevio.copiar(); 
+                    copia.agregarAdyacencia(adyacencia); 
+                    // Aquí calculamos el costo como el contador actual (número de vértices recorridos)
+                    copia.setCostoTotal(contador);
+                    todosLosCaminos.getCaminos().add(copia); 
+                } else { 
+                    caminoPrevio.agregarAdyacencia(adyacencia);
+                    destino.todosLosCaminosCasoEspecial(etVertDest, caminoPrevio, todosLosCaminos, contador + 1); // LLAMADA RECURSIVA
+                } 
+                caminoPrevio.eliminarAdyacencia(adyacencia); 
+            } 
+        } 
+        this.setVisitado(false); 
+        return todosLosCaminos; 
+    } */
 
     @Override
     public boolean tieneCiclo(LinkedList<Comparable> camino) {
@@ -334,6 +383,56 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
                 puntos.add(this);
             }
         }
+    }
+
+    public void sortTopologico(Stack<TVertice> stack) {
+        setVisitado(true);
+        for (TAdyacencia adyacencia : (Collection<TAdyacencia>) getAdyacentes()) {
+            TVertice destino = adyacencia.getDestino();
+            if (!destino.getVisitado()) {
+                destino.sortTopologico(stack);
+            }
+        }
+        stack.push(this);
+    }
+
+    public void obtenerOrdenParcial(LinkedList<TVertice> orden) {
+        if (getVisitado()) {
+            return; // Evita revisitar un vértice ya visitado
+        }
+        setVisitado(true);
+        
+        // intento de agregar un marcador 
+        /*TVertice centinela = new TVertice<>("c");
+
+        if (getAdyacentes().size() >= 2){
+            orden.add(centinela);
+        }*/
+
+        for (TAdyacencia adyacente : adyacentes) {    
+            TVertice verticeDestino = adyacente.getDestino();
+            verticeDestino.obtenerOrdenParcial(orden);
+        }
+        orden.add(this); // Agrega la tarea al inicio de la lista
+    }
+
+    public void clasificarArcosGrafoDirigido(ListaArcos arcosArbol, ListaArcos arcosRetroceso, ListaArcos arcosAvance, ListaArcos arcosCruzados, int[] tiempo) {
+        this.setVisitado(true);
+        this.setNumeroBP(tiempo[0]++);
+        for (TAdyacencia adyacencia : this.getAdyacentes()) {
+            TVertice destino = adyacencia.getDestino();
+            if (!destino.getVisitado()) {
+                arcosArbol.add(new TArista(this.getEtiqueta(), destino.getEtiqueta(),adyacencia.getCosto()));
+                destino.clasificarArcosGrafoDirigido(arcosArbol, arcosRetroceso, arcosAvance, arcosCruzados, tiempo);
+            } else if (destino.getNumeroBP() < this.getNumeroBP() && destino.getTiempoDeFinalizacion() == -1) {
+                arcosRetroceso.add(new TArista(this.getEtiqueta(), destino.getEtiqueta(),adyacencia.getCosto()));
+            } else if (destino.getNumeroBP() > this.getNumeroBP()) {
+                arcosAvance.add(new TArista(this.getEtiqueta(), destino.getEtiqueta(),adyacencia.getCosto()));
+            } else {
+                arcosCruzados.add(new TArista(this.getEtiqueta(), destino.getEtiqueta(),adyacencia.getCosto()));
+            }
+        }
+        this.setTiempoDeFinalizacion(tiempo[0]++);
     }
 
     public int numBea(Comparable etiquetaObjetivo) {

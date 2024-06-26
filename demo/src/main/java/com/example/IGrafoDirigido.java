@@ -88,6 +88,7 @@ public interface IGrafoDirigido {
      * @param unaEtiqueta Etiqueta del vertice a ingresar.
      * @return True si se pudo insertar el vertice, false en caso contrario
      */
+    boolean insertarVertice(Comparable unaEtiqueta);
     boolean insertarVertice(TVertice vertice);
     Comparable obtenerExcentricidad(Comparable etiquetaVertice);
 

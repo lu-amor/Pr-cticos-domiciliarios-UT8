@@ -3,8 +3,12 @@ package com.example;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 import java.util.TreeMap;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -187,16 +191,6 @@ public class TGrafoDirigido  implements IGrafoDirigido {
     }
 
     @Override
-    public Collection<TVertice> bpf(TVertice vertice) {
-        desvisitarVertices();
-        Collection<TVertice> visitados = new ArrayList<>();
-        if (!vertice.getVisitado()) {
-            vertice.bpf(visitados);
-        }
-        return visitados;
-    }
-
-    @Override
     public Collection<TVertice> bpf() {
         desvisitarVertices();
         Collection<TVertice> visitados = new ArrayList<>();
@@ -204,6 +198,16 @@ public class TGrafoDirigido  implements IGrafoDirigido {
             if (!vertice.getVisitado()) {
                 vertice.bpf(visitados);
             }
+        }
+        return visitados;
+    }
+
+    @Override
+    public Collection<TVertice> bpf(TVertice vertice) {
+        desvisitarVertices();
+        Collection<TVertice> visitados = new ArrayList<>();
+        if (!vertice.getVisitado()) {
+            vertice.bpf(visitados);
         }
         return visitados;
     }
@@ -220,6 +224,29 @@ public class TGrafoDirigido  implements IGrafoDirigido {
             return bpf(verticeOrigen);
         }
         return visitados; // Devolver una lista vacía si no se encuentra el vértice
+    }
+
+    public Collection<TVertice> bpfCompletoDesde(Comparable etiquetaOrigen) {   
+        // Nuevo método para completar la visita de los vértices que aún no han sido visitados
+        Collection<TVertice> visitados = bpf(etiquetaOrigen);
+        for (TVertice vertice : vertices.values()) {
+            if (!vertice.getVisitado()) {
+                vertice.bpf(visitados);
+            }
+        }
+        return visitados;
+    }
+
+    @Override
+    public Collection<TVertice> bea() {
+        this.desvisitarVertices();
+        Collection<TVertice> visitados = new ArrayList<>();
+        for (TVertice vertice : vertices.values()) {
+            if (!vertice.getVisitado()) {
+                vertice.bea(visitados);
+            }
+        }
+        return visitados;
     }
 
     @Override
@@ -357,14 +384,41 @@ public class TGrafoDirigido  implements IGrafoDirigido {
         return null;
     }
 
-    @Override
-    public boolean tieneCiclo(Comparable etiquetaOrigen) {
+    /*@SuppressWarnings("rawtypes")
+    public TCaminos todosLosCaminosCasoEspecial(Comparable etiquetaOrigen, Comparable etiquetaDestino) {
         desvisitarVertices();
-        TVertice verticeOrigen = buscarVertice(etiquetaOrigen);
-        if (verticeOrigen != null && !verticeOrigen.getVisitado()) {
-            return verticeOrigen.tieneCiclo(new LinkedList<Comparable>());
+        TCaminos todosLosCaminos = new TCaminos(); 
+        TVertice v = buscarVertice(etiquetaOrigen); 
+        if(v != null){ 
+            TCamino caminoPrevio = new TCamino(v); 
+            v.todosLosCaminosCasoEspecial(etiquetaDestino, caminoPrevio, todosLosCaminos, 1.0d); // Contador inicial en 1
+            return todosLosCaminos; 
+        } 
+        return null;
+    }*/
+
+    public boolean hayCamino(Comparable origen, Comparable destino) {
+        Object[] etiquetasArray = getVertices().keySet().toArray();
+        Integer origenIdx = null, destinoIdx = null;
+
+        for (int i = 0; i < etiquetasArray.length; i++) {
+            if (etiquetasArray[i].equals(origen)) {
+                origenIdx = i;
+            }
+            if (etiquetasArray[i].equals(destino)) {
+                destinoIdx = i;
+            }
+            if (origenIdx != null && destinoIdx != null) {
+                break;
+            }
         }
-        return false;
+
+        if (origenIdx == null || destinoIdx == null) {
+            return false;
+        }
+
+        boolean[][] matrizWarshall = warshall();
+        return matrizWarshall[origenIdx][destinoIdx];
     }
 
     @Override
@@ -393,16 +447,307 @@ public class TGrafoDirigido  implements IGrafoDirigido {
         }
         return false;
     }
-
+    
     @Override
-    public Collection<TVertice> bea() {
-        this.desvisitarVertices();
-        Collection<TVertice> visitados = new ArrayList<>();
+    public boolean tieneCiclo(Comparable etiquetaOrigen) {
+        desvisitarVertices();
+        TVertice verticeOrigen = buscarVertice(etiquetaOrigen);
+        if (verticeOrigen != null && !verticeOrigen.getVisitado()) {
+            return verticeOrigen.tieneCiclo(new LinkedList<Comparable>());
+        }
+        return false;
+    }
+
+    public boolean esConexo(){
+        int cantidadDeComponentesConexos = obtenerComponentesFuertementeConectados().getCaminos().size();
+        if (cantidadDeComponentesConexos == 0 || cantidadDeComponentesConexos == 1){
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean esFuertementeConexo() {
+        if (vertices.isEmpty()) {
+            return false;
+        }
+
+        // Realizar DFS 
+        Collection<TVertice> visitados = bpf();
+
+        // Verificar si todos los vértices fueron visitados
+        if (visitados.size() != vertices.size()) {
+            return false;
+        }
+
+        // Crear el grafo transpuesto
+        TGrafoDirigido grafoTranspuesto = transponerGrafo();
+
+        // Realizar DFS en el grafo transpuesto 
+        Collection<TVertice> visitadosTranspuesto = grafoTranspuesto.bpf();
+
+        // Verificar si todos los vértices fueron visitados en el grafo transpuesto
+        return visitadosTranspuesto.size() == vertices.size();
+    }
+
+    private TGrafoDirigido transponerGrafo() {
+        
+        Collection<TArista> aristas = new ArrayList<TArista>();
+
         for (TVertice vertice : vertices.values()) {
-            if (!vertice.getVisitado()) {
-                vertice.bea(visitados);
+            for (TAdyacencia adyacente : (Collection<TAdyacencia>) vertice.getAdyacentes()) {
+                TArista arista = new TArista(adyacente.getDestino().getEtiqueta(), vertice.getEtiqueta(), adyacente.getCosto());
+                aristas.add(arista);
             }
         }
-        return visitados;
+
+        TGrafoDirigido grafoTranspuesto = new TGrafoDirigido(vertices.values(),aristas);
+        
+        return grafoTranspuesto;
+    }
+
+    public TCaminos obtenerComponentesFuertementeConectados() {
+        Stack<TVertice> pila = new Stack<>();
+        TCaminos componentes = new TCaminos();
+        desvisitarVertices();
+
+        // Paso 1: Realizar DFS en el grafo original y registrar el orden de finalización en una pila
+        for (TVertice vertice : vertices.values()) {
+            if (!vertice.getVisitado()) {
+                bpf(vertice, pila);
+            }
+        }
+
+        // Paso 2: Transponer el grafo
+        TGrafoDirigido grafoTranspuesto = transponerGrafo();
+
+        // Paso 3: Realizar DFS en el grafo transpuesto
+        grafoTranspuesto.desvisitarVertices();
+
+        while (!pila.isEmpty()) {
+            TVertice vertice = grafoTranspuesto.buscarVertice(pila.pop().getEtiqueta());
+
+            if (!vertice.getVisitado()) {
+                TCamino componenteActual = new TCamino(vertice);
+                grafoTranspuesto.bpfTranspuesto(vertice, componenteActual);
+                componentes.getCaminos().add(componenteActual);
+            }
+        }
+        return componentes;
+    }
+
+    private void bpf(TVertice vertice, Stack<TVertice> pila) {
+        vertice.setVisitado(true);
+        for (TAdyacencia adyacente :(Collection<TAdyacencia>) vertice.getAdyacentes()) {
+            TVertice destino = adyacente.getDestino();
+            if (!destino.getVisitado()) {
+                bpf(destino, pila);
+            }
+        }
+        pila.push(vertice);
+    }
+
+    private void bpfTranspuesto(TVertice vertice, TCamino  componenteActual) {
+        vertice.setVisitado(true);
+
+        // Agregar el vértice actual al camino
+        //componenteActual.getOtrosVertices().add(vertice.getEtiqueta()); 
+        componenteActual.setOtrosVertices(vertice.getEtiqueta());
+
+        for (TAdyacencia adyacente : (Collection<TAdyacencia>) vertice.getAdyacentes()) {
+            TVertice destino = adyacente.getDestino();
+            if (!destino.getVisitado()) {
+                bpfTranspuesto(destino, componenteActual);
+            }
+        }
+    }
+
+    public List<TVertice> sortTopologico() {
+        desvisitarVertices();
+        Stack<TVertice> stack = new Stack<>();
+        for (TVertice vertice : vertices.values()) {
+            if (!vertice.getVisitado()) {
+                vertice.sortTopologico(stack);
+            }
+        }
+        List<TVertice> ordenTopologico = new ArrayList<>();
+        while (!stack.isEmpty()) {
+            ordenTopologico.add(stack.pop());
+        }
+        return ordenTopologico;
+    }
+
+    public LinkedList<TVertice> obtenerOrdenParcial() {
+        
+        desvisitarVertices();
+        LinkedList<TVertice> orden = new LinkedList();
+        
+        if (!tieneCiclo()){
+            return orden;
+        }
+
+        TGrafoDirigido grafoTranspuesto = transponerGrafo();
+        Map<Comparable,TVertice> verticesGrafoTranspuesto = grafoTranspuesto.getVertices();
+
+        for (TVertice vertice : verticesGrafoTranspuesto.values()) {
+            if (!vertice.getVisitado()) {
+                vertice.obtenerOrdenParcial(orden);
+            }
+        }
+        //Collections.reverse(orden);
+        return orden;
+    }
+
+    public TCamino caminoCritico() {
+        TVertice origen = null;
+        Set<TVertice> verticesConEntradas = new HashSet<>();
+        for (TVertice vertice : vertices.values()) {
+            for (TAdyacencia adyacente : (Collection<TAdyacencia>) vertice.getAdyacentes()) {
+                verticesConEntradas.add(adyacente.getDestino());
+            }
+        }
+        for (TVertice vertice : vertices.values()) {
+            if (!verticesConEntradas.contains(vertice)) {
+                origen = vertice;
+                break;
+            }
+        }
+        if (origen == null) {
+            return null;
+        }
+    
+        // Identificar el destino final (sin adyacencias)
+        TVertice destino = null;
+        for (TVertice vertice : vertices.values()) {
+            if (vertice.getAdyacentes().isEmpty()) {
+                destino = vertice;
+                break;
+            }
+        }
+        if (destino == null) {
+            return null;
+        }
+    
+        // Obtener todos los caminos desde el origen al destino
+        TCaminos todosLosCaminos = origen.todosLosCaminos(destino.getEtiqueta(), new TCamino(origen), new TCaminos());
+    
+        // Encontrar el camino con el mayor costo (camino crítico)
+        TCamino caminoCritico = null;
+        double maxCosto = Double.NEGATIVE_INFINITY;
+        for (TCamino camino : todosLosCaminos.getCaminos()) {
+            if (camino.getCostoTotal() > maxCosto) {
+                maxCosto = camino.getCostoTotal();
+                caminoCritico = camino;
+                caminoCritico.setCostoTotal(maxCosto);
+            }
+        }
+        return caminoCritico;
+    }
+    
+    /*public TCamino caminoCriticoCasoEspecial() {
+        TVertice origen = null;
+        Set<TVertice> verticesConEntradas = new HashSet<>();
+        for (TVertice vertice : vertices.values()) {
+            for (TAdyacencia adyacente : (Collection<TAdyacencia>) vertice.getAdyacentes()) {
+                verticesConEntradas.add(adyacente.getDestino());
+            }
+        }
+        for (TVertice vertice : vertices.values()) {
+            if (!verticesConEntradas.contains(vertice)) {
+                origen = vertice;
+                break;
+            }
+        }
+        if (origen == null) {
+            return null;
+        }
+    
+        // Identificar el destino final (sin adyacencias)
+        TVertice destino = null;
+        for (TVertice vertice : vertices.values()) {
+            if (vertice.getAdyacentes().isEmpty()) {
+                destino = vertice;
+                break;
+            }
+        }
+        if (destino == null) {
+            return null;
+        }
+    
+        // Obtener todos los caminos desde el origen al destino usando el nuevo método
+        TCaminos todosLosCaminos = todosLosCaminosCasoEspecial(origen.getEtiqueta(), destino.getEtiqueta());
+    
+        // Encontrar el camino con el mayor costo (camino crítico)
+        TCamino caminoCritico = null;
+        double maxCosto = Double.NEGATIVE_INFINITY;
+        for (TCamino camino : todosLosCaminos.getCaminos()) {
+            if (camino.getCostoTotal() > maxCosto) {
+                maxCosto = camino.getCostoTotal();
+                caminoCritico = camino;
+            }
+        }
+    
+        if (caminoCritico != null) {
+            caminoCritico.setCostoTotal(maxCosto);
+        }
+    
+        return caminoCritico;
+    }*/
+    
+
+    public TCaminos obtenerCaminosNoCriticos() {
+        TCamino caminoCritico = this.caminoCritico();
+        if (caminoCritico == null) {
+            return new TCaminos();
+        }
+        double costoCaminoCritico = caminoCritico.getCostoTotal();
+        TCaminos caminosNoCriticos = new TCaminos();
+
+        TCaminos todosLosCaminos = this.todosLosCaminos(caminoCritico.getOrigen().getEtiqueta(), caminoCritico.getDestino());
+        for (TCamino camino : todosLosCaminos.getCaminos()) {
+            if (!camino.equals(caminoCritico)) {
+                double holgura = costoCaminoCritico - camino.getCostoTotal();
+                camino.setHolgura(holgura);
+                caminosNoCriticos.getCaminos().add(camino);
+            }
+        }
+        return caminosNoCriticos;
+    }
+
+    /*public TCaminos obtenerCaminosNoCriticosCasoEspecial() {
+        TCamino caminoCritico = this.caminoCriticoCasoEspecial();
+        if (caminoCritico == null) {
+            return new TCaminos();
+        }
+        double costoCaminoCritico = caminoCriticoCasoEspecial().getCostoTotal();
+        TCaminos caminosNoCriticos = new TCaminos();
+    
+        TCaminos todosLosCaminos = this.todosLosCaminosCasoEspecial(caminoCritico.getOrigen().getEtiqueta(), caminoCritico.getDestino());
+        for (TCamino camino : todosLosCaminos.getCaminos()) {
+            if (!camino.equals(caminoCritico)) {
+                double holgura = costoCaminoCritico - camino.getCostoTotal();
+                camino.setHolgura(holgura);
+                caminosNoCriticos.getCaminos().add(camino);
+            }
+        }
+        return caminosNoCriticos;
+    }*/
+
+    public void clasificarArcos(TVertice verticeOrigen, ListaArcos arcosArbol, ListaArcos arcosRetroceso, ListaArcos arcosAvance, ListaArcos arcosCruzados) {
+        desvisitarVertices();
+        int[] tiempo = {0}; // Array para mantener el tiempo de forma mutable
+        if (verticeOrigen != null) {
+            verticeOrigen.clasificarArcosGrafoDirigido(arcosArbol, arcosRetroceso, arcosAvance, arcosCruzados, tiempo);
+        }
+    }
+
+    public void listarTareas(LinkedList<TVertice> orden) {
+        if (!orden.isEmpty()){
+            for (TVertice vertice : orden) {
+                System.out.println(vertice.getEtiqueta());
+            }
+        } else {
+            System.out.println("se ha ingresado una lista vacía");
+        }
     }
 }
+
