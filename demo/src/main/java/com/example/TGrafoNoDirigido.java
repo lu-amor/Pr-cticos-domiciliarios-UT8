@@ -217,32 +217,44 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
     @Override
     public TCamino caminoCritico() {
         // TODO Auto-generated method stub
-        return UnsupportedOperationException;
+        throw new UnsupportedOperationException("Unimplemented method 'caminoCritico'");
     }
 
     @Override
     public TCaminos obtenerCaminosNoCriticos() {
         // TODO Auto-generated method stub
-        return UnsupportedOperationException;
+        throw new UnsupportedOperationException("Unimplemented method 'obtenerCaminosNoCriticos'");
     }
 
     @Override
     public void clasificarArcos(TVertice verticeOrigen, ListaArcos arcosArbol, ListaArcos arcosRetroceso,
             ListaArcos arcosAvance, ListaArcos arcosCruzados) {
         // TODO Auto-generated method stub
-        return UnsupportedOperationException;
+        throw new UnsupportedOperationException("Unimplemented method 'clasificarArcos'");
         
     }
 
     @Override
     public boolean esFuertementeConexo() {
         // TODO Auto-generated method stub
-        return UnsupportedOperationException;
+        throw new UnsupportedOperationException("Unimplemented method 'esFuertementeConexo'");
     }
 
     @Override
     public TCaminos obtenerComponentesFuertementeConectados() {
         // TODO Auto-generated method stub
-        return UnsupportedOperationException;
+        throw new UnsupportedOperationException("Unimplemented method 'obtenerComponentesFuertementeConectados'");
+    }
+
+    @Override
+    public LinkedList<TVertice> obtenerOrdenParcial() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'obtenerOrdenParcial'");
+    }
+
+    @Override
+    public List<TVertice> sortTopologico() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'sortTopologico'");
     }
 }
