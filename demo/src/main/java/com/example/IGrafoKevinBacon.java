@@ -7,6 +7,6 @@ import java.util.Collection;
  */
 @SuppressWarnings("rawtypes")
 public interface IGrafoKevinBacon {
-    //Collection<TVertice> listarContactos (String nombreActor, int maxSaltos);
-    Collection <TVertice> obtenerVerticesConMaxEnlaces(String verticeInicio, int maxEnlaces);
+    Collection<TVertice> listarContactos (String nombreActor, int maxSaltos);
+    //Collection <TVertice> obtenerVerticesConMaxEnlaces(String verticeInicio, int maxEnlaces);
 }

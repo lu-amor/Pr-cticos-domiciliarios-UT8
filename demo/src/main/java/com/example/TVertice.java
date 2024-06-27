@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.Stack;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContagio {
+public class TVertice<T> implements IVertice, IVerticeKevinBacon{
 
     private final Comparable etiqueta; // etiqueta no era final
     private final LinkedList<TAdyacencia> adyacentes; //adyacentes no era final
@@ -68,21 +68,6 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         return this.visitado;
     }
 
-    /**
-     * @return the bea number
-     */
-    @Override
-    public int getBacon() {
-        return this.numBea;
-    }
-
-    /**
-     * @param numBacon the bacon number to set
-     */
-    @Override
-    public void setBacon(int numBacon) {
-        this.numBea = numBacon;
-    }
 
     /**
      * @return the predecesor
@@ -102,7 +87,7 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
      * @return the BEA number
      */
     public int getNumeroBEA(){
-        return numeroBajo;
+        return numBea;
 
     }
     /**
@@ -463,8 +448,7 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         return -1;
     }
 
-    @Override
-    public Set<TVertice> buscarMaxEnlacesDesdeVertice(int maxEnlaces, Set<TVertice> visitados) { // listarContactos 2018
+     public Set<TVertice> buscarMaxEnlacesDesdeVertice(int maxEnlaces, Set<TVertice> visitados) { // listarContactos 2018
         Set<TVertice> resultado = new HashSet<>();
         Queue<TVertice> cola = new LinkedList<>();
         Queue<Integer> niveles = new LinkedList<>();
@@ -492,6 +476,51 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
         return resultado;
     }
 
+    /**
+     * @return the bea number
+     */
+    @Override
+    public int getBacon() {
+        return getNumeroBEA();
+    }
+
+    /**
+     * @param numBacon the bacon number to set
+     */
+    @Override
+    public void setBacon(int numBacon) {
+        setNumeroBEA(numBacon);
+    }
+
+
+    @Override
+    public void listarContactos(Collection<TVertice> visitados, int maxSaltos) {
+        Queue<TVertice> queue = new LinkedList<>();
+        queue.add(this);
+        setVisitado(true);
+        setBacon(0);
+        
+        while (!queue.isEmpty()) {
+            TVertice current = queue.poll();
+            int currentBacon = current.getBacon();
+            
+            if (currentBacon >= maxSaltos) {
+                break;
+            }
+            
+            for (TAdyacencia adyacencia : (Collection<TAdyacencia>) current.getAdyacentes()) {
+                TVertice vecino =  adyacencia.getDestino();
+                if (!vecino.getVisitado()) {
+                    vecino.setVisitado(true);
+                    vecino.setBacon(currentBacon + 1);
+                    queue.add(vecino);
+                    visitados.add(vecino);
+                }
+            }
+        }
+    } 
+    
+
     public Map<TVertice, Integer> obtenerDistancias() { // listarContactos 2020 (Caso COVID)
         Map<TVertice, Integer> distancias = new HashMap<>();
         Queue<TVertice> cola = new LinkedList<>();
@@ -517,36 +546,5 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon, IVerticeContag
     
         distancias.remove(this);
         return distancias;
-    }
-
-    @Override
-    public void obtenerAnillos(TAnillosContagio losAnillos, int maxDistancia) {
-        Queue<TVertice> cola = new LinkedList<>();
-        Queue<Integer> distancias = new LinkedList<>();
-
-        cola.add(this);
-        distancias.add(0);
-        setVisitado(true);
-
-        while (!cola.isEmpty()) {
-            TVertice actual = cola.poll();
-            int distancia = distancias.poll();
-
-            if (distancia > maxDistancia && maxDistancia > 0) {
-                continue;
-            }
-
-            losAnillos.agregarContagio(distancia, actual.getEtiqueta().toString());
-
-            for (TAdyacencia adyacencia : (Collection<TAdyacencia>)actual.getAdyacentes()) {
-                TVertice adyacente = adyacencia.getDestino();
-                if (!adyacente.getVisitado()) {
-                    cola.add(adyacente);
-                    distancias.add(distancia + 1);
-                    adyacente.setVisitado(true);
-                }
-            }
-        }
-        
     }
 }

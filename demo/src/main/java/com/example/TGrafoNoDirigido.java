@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings({ "rawtypes", "unchecked", "unused"})
-public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido, IGrafoKevinBacon, IGrafoRedElectrica {
+public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido {
     
     protected TAristas lasAristas = new TAristas();
     //protected TVertices vertices;
@@ -105,28 +105,6 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
     }
 
     @Override
-    public TAristas mejorRedElectrica() {
-        Set<Comparable> U = new HashSet<>();
-        Set<Comparable> V = new HashSet<>(getVertices().keySet());
-        TAristas aristasAAM = new TAristas();
-        double costoPrim = 0;
-        Comparable primerVertice = V.iterator().next();
-        V.remove(primerVertice);
-        U.add(primerVertice);
-
-        while (!V.isEmpty()) {
-            TArista tempArista = getLasAristas().buscarMin(U, V);
-            if (tempArista != null) {
-                aristasAAM.add(tempArista);
-                V.remove(tempArista.getEtiquetaDestino());
-                U.add(tempArista.getEtiquetaDestino());
-                costoPrim += tempArista.getCosto();
-            }
-        }
-        return aristasAAM;
-    }
-
-    @Override
     public Collection<TVertice> bea(Comparable etiquetaOrigen) {
         this.desvisitarVertices();
         Collection<TVertice> visitados = new ArrayList<>();
@@ -190,15 +168,15 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
         return -1;
     }
 
-    @Override
-    public Set<TVertice> obtenerVerticesConMaxEnlaces(String verticeInicio, int maxEnlaces) { // listarContactos parcial 2018 (Kevin Bacon)
-        if (!getVertices().containsKey(verticeInicio)) {
+    public Set<TVertice> obtenerVerticesConMaxEnlaces(String etiquetaInicio, int maxEnlaces) { // listarContactos parcial 2018 (Kevin Bacon)
+        desvisitarVertices();
+        if (existeVertice(etiquetaInicio)) {
             return new HashSet<>();
         }
-        TVertice vertice = buscarVertice(verticeInicio); 
+        TVertice verticeInicio = buscarVertice(etiquetaInicio); 
         Set<TVertice> visitados = new HashSet<>();
-        visitados.add(vertice);
-        return vertice.buscarMaxEnlacesDesdeVertice(maxEnlaces, visitados);
+        visitados.add(verticeInicio);
+        return verticeInicio.buscarMaxEnlacesDesdeVertice(maxEnlaces, visitados);
     }
 
     public List<Map.Entry<TVertice, Integer>> obtenerDistanciasDesdeVertice(String etiquetaVertice) { // listarContactos 2020 (Caso  COVID)

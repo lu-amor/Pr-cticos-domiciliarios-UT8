@@ -15,7 +15,7 @@ public class TGrafoContagios extends TGrafoNoDirigido implements IGrafoContagio{
     @Override
     public TAnillosContagio anillosDeProbablesContagiados(String personaCOVID, int maxDistancia) {
         desvisitarVertices();
-        TVertice persona =  buscarVertice(personaCOVID);
+        TVerticeContagio persona =  (TVerticeContagio) buscarVertice(personaCOVID);
         if (persona == null) {
             return null;
         }
