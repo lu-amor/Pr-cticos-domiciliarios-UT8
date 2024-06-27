@@ -145,12 +145,6 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
         return puntos;
     }
 
-    @Override
-    public boolean esConexo() {
-        Collection<TVertice> visitados = bpf();
-        return visitados.size() == getVertices().size();
-    }
-
     public Collection<TVertice> bpfNoCompleto() {
         desvisitarVertices();
         Collection<TVertice> visitados = new ArrayList<>();
@@ -225,9 +219,21 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
     }
 
     @Override
+    public boolean esConexoAcordeACantidadComponentes() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'esConexoAcordeACantidadComponentes'");
+    }
+
+    @Override
     public LinkedList<TVertice> obtenerOrdenParcial() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'obtenerOrdenParcial'");
+    }
+
+    @Override
+    public LinkedList<Comparable> ordenParcial() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'ordenParcial'");
     }
 
     @Override
