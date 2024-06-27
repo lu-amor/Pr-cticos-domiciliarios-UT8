@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * @author javie
@@ -48,12 +49,12 @@ public class PruebaGrafo{
         //UT8_TA5(); 
         //UT8_TA6(); 
 
-        //Parcial2018enGrafoKevinBacon(); // testing
+        //Parcial2018enGrafoKevinBacon(); 
         //Parcial2018enGrafoNoDirigido();
-        //Parcial2019(); // falta testing 
-        //Parcial2020(); // implementar como lo sugiere la letra del problema - main - testing
-        //Parcial2020Personalizado(); // falta testing
-        //Parcial2021(); //falta testing
+        //Parcial2019(); 
+        //Parcial2020(); //  no funca el main - testing
+        //Parcial2020Personalizado(); 
+        //Parcial2021(); 
     }
 
     @SuppressWarnings({ "rawtypes"})
@@ -162,7 +163,8 @@ public class PruebaGrafo{
         gd.tieneCiclo();
     }
     
-    /*@SuppressWarnings("rawtypes")
+    /*@SuppressWarnings("rawtypes") 
+    //comentado porque los metodos en si estan comentados en la clase TGrafoDirigido y en TVertice, los metodos funcionan bien
     public static void UT7_TA6_2(){
         //----------- EJERCICIO 2 DEL TA6-----------
         TGrafoDirigido gd = (TGrafoDirigido) UtilGrafos.cargarGrafo("PD8/src/tareas.txt", "PD8\\src\\precedencias.txt",
@@ -305,8 +307,14 @@ public class PruebaGrafo{
         TGrafoDirigido gd = (TGrafoDirigido) UtilGrafos.cargarGrafo("src\\aeropuertos_1.txt", "src\\conexiones_1.txt",
                 false, TGrafoDirigido.class);
 
-        boolean esConexo = gd.esFuertementeConexo();
-        System.out.println("El grafo es fuertemente conexo: " + esConexo + "\n");
+        //boolean esFuertementeConexo = gd.esFuertementeConexo(); no funciona siempre bien
+        boolean esConexo = gd.esConexo();
+        boolean esConexoAcordeACantidadComponentes = gd.esConexoAcordeACantidadComponentes();
+
+        // ambos casos deben de retornar la misma respuesta
+        System.out.println("El grafo es conexo: " + esConexo);
+        System.out.println("El grafo es conexo acorde a su cantidad de componentes conexos?" + esConexoAcordeACantidadComponentes + "\n");
+        
         // ----------- PD5 EJERCICIO 3 PARTE 2-----------
         TCaminos componentesConexos = gd.obtenerComponentesFuertementeConectados();
         componentesConexos.imprimirComponentesConexosConsola();
@@ -666,24 +674,40 @@ public class PruebaGrafo{
     }
 
     public static void Parcial2020(){
-        // CREAR EL GRAFO CON PERSONAS.TXT y CONTACTOS.TXT
-        
-        TGrafoContagios grafoTrazabilidad = (TGrafoContagios) UtilGrafos.cargarGrafo(
-                "src/personas.txt",
-                "src/contactos.txt",
-                false, TGrafoContagios.class);
-        
-        String personaCOVID = "SE INDICARA EN EL PIZARRON";
-        //int maxDistancia = SE INDICARA EN EL PIZARRON
-        
-        // invocar al método "anillosDeProbablesContagiados" con estos parámetros;
+        try {
+            // CREAR EL GRAFO CON PERSONAS.TXT y CONTACTOS.TXT
+            String personas = "demo\\src\\main\\java\\com\\example\\UT8archs\\Parcial2020archs\\personas.txt";
+            String contactos = "demo\\src\\main\\java\\com\\example\\UT8archs\\Parcial2020archs\\contactos.txt";
+            TGrafoContagios grafoTrazabilidad = (TGrafoContagios) UtilGrafos.cargarGrafo(
+                    personas,
+                    contactos,
+                    false, TGrafoContagios.class);
+            
+            
+            String personaCOVID = "Keira_Knightley";
+            int maxDistancia = 5;
 
-        // emitir por consola la cantidad de contactos que se encuentran a la distancia
-        // de la personaCOVID indicada EN EL PIZARRÓN: distAnilloBuscar
-        //int distAnilloBuscar = SE INDICARA EN EL PIZARRÓN
-         // EMITIR EL ARCHIVO "ANILLOS.TXT", CON EL FORMATO INDICADO EN LA LETRA, 
-         // CON LOS CONJUNTOS DE CONTACTOS HASTA UNA DISTANCIA MENOR O IGUAL A LA INDICADA
-         // EN EL PIZARRÓN: distMaxParaArchivoListado
+            // invocar al método "anillosDeProbablesContagiados" con estos parámetros
+            TAnillosContagio anillosContagios = grafoTrazabilidad.anillosDeProbablesContagiados(personaCOVID, maxDistancia);
+
+            // emitir por consola la cantidad de contactos que se encuentran a la distancia
+            TreeSet<String> anillo = anillosContagios.obtenerAnillo(maxDistancia);
+
+            System.out.println("la cantidad de contactos de" + personaCOVID + "a la distancia de " + maxDistancia + "es " + anillo.size() );
+            System.out.println("dichos contactos son : ");
+            for (String contacto : anillo){
+                System.out.println(contacto);
+            }
+
+            // de la personaCOVID indicada EN EL PIZARRÓN: distAnilloBuscar
+            //int distAnilloBuscar = SE INDICARA EN EL PIZARRÓN
+            // EMITIR EL ARCHIVO "ANILLOS.TXT", CON EL FORMATO INDICADO EN LA LETRA, 
+            // CON LOS CONJUNTOS DE CONTACTOS HASTA UNA DISTANCIA MENOR O IGUAL A LA INDICADA
+            // EN EL PIZARRÓN: distMaxParaArchivoListado
+        } catch (Exception e) {
+            System.err.println("Error durante la ejecución del programa: " + e.getMessage());
+            e.printStackTrace();
+        }
         
     }
 

@@ -388,17 +388,40 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon{
         setVisitado(true);
         
         // intento de agregar un marcador 
-        /*TVertice centinela = new TVertice<>("c");
+        TVertice centinela = new TVertice<>("$");
 
-        if (getAdyacentes().size() >= 2){
-            orden.add(centinela);
-        }*/
 
         for (TAdyacencia adyacente : adyacentes) {    
             TVertice verticeDestino = adyacente.getDestino();
-            verticeDestino.obtenerOrdenParcial(orden);
+            if (!verticeDestino.getVisitado()){
+                verticeDestino.obtenerOrdenParcial(orden);
+                orden.add(centinela); 
+            }
+            
         }
-        orden.add(this); // Agrega la tarea al inicio de la lista
+
+        if (!orden.contains(this)){
+            orden.add(this); // Agrega la tarea al inicio de la lista
+        }
+    }
+
+    public void ordenParcial(LinkedList<Comparable> result) {
+        setVisitado(true);
+
+        if (adyacentes.size() == 1) {
+            adyacentes.getFirst().getDestino().ordenParcial(result);
+        } else {
+            for (TAdyacencia ady : adyacentes) {
+                TVertice destino = ady.getDestino();
+                if (!destino.getVisitado()) {
+                    destino.ordenParcial(result);
+                    result.add("$");
+                }
+            }
+        }
+
+        if (!result.contains(etiqueta))
+            result.add(etiqueta);
     }
 
     public void clasificarArcosGrafoDirigido(ListaArcos arcosArbol, ListaArcos arcosRetroceso, ListaArcos arcosAvance, ListaArcos arcosCruzados, int[] tiempo) {

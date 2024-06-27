@@ -274,6 +274,39 @@ public class TGrafoDirigido  implements IGrafoDirigido {
     return centro;
     }
 
+    public Map<Comparable, Double> dijkstra(Comparable etiquetaOrigen) {
+        Set<TVertice> noVisitados = new HashSet<>(vertices.values());
+
+        Map<Comparable, Double> distancias = new HashMap<>();
+        for (TVertice vertice : vertices.values()) {
+            distancias.put(vertice.getEtiqueta(), Double.POSITIVE_INFINITY);
+        }
+        distancias.put(etiquetaOrigen, 0.0);
+
+        while (!noVisitados.isEmpty()) {
+            TVertice v = null;
+            for (TVertice vertice : noVisitados) {
+                if (v == null || distancias.get(vertice.getEtiqueta()) < distancias.get(v.getEtiqueta())) {
+                    v = vertice;
+                }
+            }
+
+            noVisitados.remove(v);
+
+            for (Object adyacente : v.getAdyacentes()) {
+                TVertice w = ((TAdyacencia) adyacente).getDestino();
+                double peso = ((TAdyacencia) adyacente).getCosto();
+                double distanciaHastaV = distancias.get(v.getEtiqueta());
+                double distanciaPropuesta = distanciaHastaV + peso;
+                if (distanciaPropuesta < distancias.get(w.getEtiqueta())) {
+                    distancias.put(w.getEtiqueta(), distanciaPropuesta);
+                }
+            }
+        }
+
+        return distancias;
+    }
+
     @Override
     public Double[][] floyd() {
         Double [][] matrizDistancias = UtilGrafos.obtenerMatrizCostos(getVertices());
@@ -458,15 +491,19 @@ public class TGrafoDirigido  implements IGrafoDirigido {
         return false;
     }
 
-    public boolean esConexo(){
+    public boolean esConexoAcordeACantidadComponentes(){
         int cantidadDeComponentesConexos = obtenerComponentesFuertementeConectados().getCaminos().size();
         if (cantidadDeComponentesConexos == 0 || cantidadDeComponentesConexos == 1){
             return true;
         }
         return false;
     }
+
+    public boolean esConexo(){
+        return bpf().size() == getVertices().size();
+    }
     
-    public boolean esFuertementeConexo() {
+    public boolean esFuertementeConexo() { // no esta funcando del todo bien 
         if (vertices.isEmpty()) {
             return false;
         }
@@ -595,6 +632,17 @@ public class TGrafoDirigido  implements IGrafoDirigido {
         }
         //Collections.reverse(orden);
         return orden;
+    }
+
+    public LinkedList<Comparable> ordenParcial() {
+        TVertice aux = buscarVertice("Fin");
+        LinkedList<Comparable> result = new LinkedList<>();
+        if(aux == null) return result;
+
+        desvisitarVertices();
+        TGrafoDirigido invertido = transponerGrafo();
+        invertido.buscarVertice("Fin").ordenParcial(result);
+        return result;
     }
 
     public TCamino caminoCritico() {
