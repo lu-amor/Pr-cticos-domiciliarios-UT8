@@ -48,7 +48,8 @@ public class PruebaGrafo{
         //UT8_TA5(); 
         //UT8_TA6(); 
 
-        //Parcial2018();
+        //Parcial2018enGrafoKevinBacon(); // testing
+        //Parcial2018enGrafoNoDirigido();
         //Parcial2019(); // falta testing 
         //Parcial2020(); // implementar como lo sugiere la letra del problema - main - testing
         //Parcial2020Personalizado(); // falta testing
@@ -432,7 +433,7 @@ public class PruebaGrafo{
     public static void UT8_TA5(){ 
         String actores = "UT8_PD1 - copia/mavenproject1/src/main/java/com/mycompany/mavenproject1/TA5archs/actores.csv";
         String en_pelicula = "UT8_PD1 - copia/mavenproject1/src/main/java/com/mycompany/mavenproject1/TA5archs/en_pelicula.csv";
-        TGrafoNoDirigido gd = (TGrafoNoDirigido) UtilGrafos.cargarGrafo(actores, en_pelicula, false, TGrafoNoDirigido.class);
+        TGrafoKevinBacon gd = (TGrafoKevinBacon) UtilGrafos.cargarGrafo(actores, en_pelicula, false, TGrafoKevinBacon.class);
 
         int distancia = gd.numBea( "John_Goodman", "Kevin_Bacon");
         int distancia2 = gd.numBea("Tom_Cruise", "Kevin_Bacon");
@@ -452,7 +453,7 @@ public class PruebaGrafo{
         res[4] = "Distancia de Dijimon_Hounsou a Kevin_Bacon: " + distancia5;
         ManejadorArchivosGenerico.escribirArchivo("UT8_PD1 - copia/mavenproject1/src/main/java/com/mycompany/mavenproject1/TA5archs/salida.txt", res);
 
-        Set<TVertice> actoresConectados = gd.obtenerVerticesConMaxEnlaces("Kevin_Bacon", 6);
+        Set<TVertice> actoresConectados = gd.listarContactos("Kevin_Bacon", 6);
         for (TVertice actor : actoresConectados) {
             System.out.println(actor.getEtiqueta());
         }  
@@ -488,11 +489,55 @@ public class PruebaGrafo{
     }
 
     @SuppressWarnings("rawtypes")
-    public static void Parcial2018(){
+    public static void Parcial2018enGrafoKevinBacon(){
         try {
             String actores = "UT8_PD1 - copia/mavenproject1/src/main/java/com/mycompany/mavenproject1/Parcial2018archs/actores.txt";
             String en_pelicula = "UT8_PD1 - copia/mavenproject1/src/main/java/com/mycompany/mavenproject1/Parcial2018archs/en_pelicula.txt";
-            TGrafoNoDirigido gkb = (TGrafoNoDirigido) UtilGrafos.cargarGrafo(actores, en_pelicula, false, TGrafoNoDirigido.class);
+            TGrafoKevinBacon gkb = (TGrafoKevinBacon) UtilGrafos.cargarGrafo(actores, en_pelicula, false, TGrafoKevinBacon.class);
+
+            String actorZZ1 = "Tom_Cruise"; // se indicará en el pizarrón
+            Collection<TVertice> contactos1 = gkb.listarContactos(actorZZ1, 1);
+
+            String actorZZ2 = "Kevin_Bacon"; // se indicará en el pizarrón
+            Collection<TVertice> contactos2 = gkb.listarContactos(actorZZ2, 2);
+
+            String[] salida1 = new String[contactos1.size()];
+            int cont = 0;
+
+            System.out.println("Contactos de Tom_Cruise:\n");
+            for (TVertice vertice : contactos1) {
+                System.out.println(vertice.getEtiqueta());
+                salida1[cont++] = vertice.getEtiqueta().toString();
+            }
+            System.out.println("\n");
+
+            String[] salida2 = new String[contactos2.size()];
+            cont = 0;
+            
+            System.out.println("Contactos de Kevin_Bacon:\n");
+            for (TVertice vertice : contactos2) {
+                System.out.println(vertice.getEtiqueta());
+                salida2[cont++] = vertice.getEtiqueta().toString();
+            }
+
+            // emitir un archivo de salida, "salida.txt" con la lista de contactos obtenida
+            String archSalida1 = "UT8_PD1 - copia/mavenproject1/src/main/java/com/mycompany/mavenproject1/Parcial2018archs/salida1.txt";
+            ManejadorArchivosGenerico.escribirArchivo(archSalida1, salida1);
+            String archSalida2 = "UT8_PD1 - copia/mavenproject1/src/main/java/com/mycompany/mavenproject1/Parcial2018archs/salida2.txt";
+            ManejadorArchivosGenerico.escribirArchivo(archSalida2, salida2);
+
+        } catch (Exception e) {
+            System.err.println("Error durante la ejecución del programa: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+   
+    @SuppressWarnings("rawtypes")
+    public static void Parcial2018enGrafoNoDirigido(){
+        try {
+            String actores = "UT8_PD1 - copia/mavenproject1/src/main/java/com/mycompany/mavenproject1/Parcial2018archs/actores.txt";
+            String en_pelicula = "UT8_PD1 - copia/mavenproject1/src/main/java/com/mycompany/mavenproject1/Parcial2018archs/en_pelicula.txt";
+            TGrafoNoDirigido gkb = UtilGrafos.cargarGrafo(actores, en_pelicula, false, TGrafoNoDirigido.class);
 
             String actorZZ1 = "Tom_Cruise"; // se indicará en el pizarrón
             Collection<TVertice> contactos1 = gkb.obtenerVerticesConMaxEnlaces(actorZZ1, 1);
@@ -520,9 +565,9 @@ public class PruebaGrafo{
             }
 
             // emitir un archivo de salida, "salida.txt" con la lista de contactos obtenida
-            String archSalida1 = "UT8_PD1 - copia/mavenproject1/src/main/java/com/mycompany/mavenproject1/Parcial2018archs/salida1.txt";
+            String archSalida1 = "UT8_PD1 - copia/mavenproject1/src/main/java/com/mycompany/mavenproject1/Parcial2018archs/salida1personalizada.txt";
             ManejadorArchivosGenerico.escribirArchivo(archSalida1, salida1);
-            String archSalida2 = "UT8_PD1 - copia/mavenproject1/src/main/java/com/mycompany/mavenproject1/Parcial2018archs/salida2.txt";
+            String archSalida2 = "UT8_PD1 - copia/mavenproject1/src/main/java/com/mycompany/mavenproject1/Parcial2018archs/salida2personalizada.txt";
             ManejadorArchivosGenerico.escribirArchivo(archSalida2, salida2);
 
         } catch (Exception e) {

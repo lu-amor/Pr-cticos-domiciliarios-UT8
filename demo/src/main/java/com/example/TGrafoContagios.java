@@ -5,6 +5,7 @@ import java.util.Collection;
 /**
  * @author ernesto
  */
+@SuppressWarnings("rawtypes")
 public class TGrafoContagios extends TGrafoNoDirigido implements IGrafoContagio{
     
     public TGrafoContagios(Collection<TVertice> vertices, Collection<TArista> aristas) {
@@ -13,7 +14,13 @@ public class TGrafoContagios extends TGrafoNoDirigido implements IGrafoContagio{
 
     @Override
     public TAnillosContagio anillosDeProbablesContagiados(String personaCOVID, int maxDistancia) {
-        throw new UnsupportedOperationException("Not supported yet.");
-        // debe realizarse invocando el metodo de TVertice "obtenerAnillos"...
+        desvisitarVertices();
+        TVerticeContagio persona =  (TVerticeContagio) buscarVertice(personaCOVID);
+        if (persona == null) {
+            return null;
+        }
+        TAnillosContagio anillos = new TAnillosContagio();
+        persona.obtenerAnillos(anillos, maxDistancia);
+        return anillos;
     }
 }
