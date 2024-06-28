@@ -52,7 +52,7 @@ public class PruebaGrafo{
         //Parcial2018enGrafoKevinBacon(); 
         //Parcial2018enGrafoNoDirigido();
         //Parcial2019(); 
-        //Parcial2020(); //  no funca el main - testing
+        Parcial2020(); //  no funca el main - testing
         //Parcial2020Personalizado(); 
         //Parcial2021(); 
     }
