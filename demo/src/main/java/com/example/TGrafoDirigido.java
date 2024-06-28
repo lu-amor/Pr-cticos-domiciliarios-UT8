@@ -20,7 +20,8 @@ public class TGrafoDirigido  implements IGrafoDirigido {
     public TGrafoDirigido(Collection<TVertice> vertices, Collection<TArista> aristas) {
         this.vertices = new HashMap<>();
         for (TVertice vertice : vertices) {
-            insertarVertice(vertice.getEtiqueta()); // metodo que no fue dado como privado
+            insertarVertice(vertice); // antes era insertarVertice(vertice.getEtiqueta());
+            // insertarVertice : metodo que no fue dado como privado
         }
         this.aristas = new TAristas();
         for (TArista arista : aristas) {
@@ -177,8 +178,7 @@ public class TGrafoDirigido  implements IGrafoDirigido {
             /*vertice.setNumeroBP(-1);
             vertice.setNumeroBEA(-1);
             vertice.setTiempoDeFinalizacion(-1);
-            vertice.setNumeroBajo(-1);
-            vertice.setTiempoDeFinalizacion(-1);*/
+            vertice.setNumeroBajo(-1);*/
         }
     }
 
@@ -206,9 +206,11 @@ public class TGrafoDirigido  implements IGrafoDirigido {
     public Collection<TVertice> bpf(TVertice vertice) {
         desvisitarVertices();
         Collection<TVertice> visitados = new ArrayList<>();
-        if (!vertice.getVisitado()) {
-            vertice.bpf(visitados);
-        }
+        if (existeVertice(vertice.getEtiqueta())){
+            if (!vertice.getVisitado()) {
+                vertice.bpf(visitados);
+            }
+        }  
         return visitados;
     }
 
@@ -218,10 +220,10 @@ public class TGrafoDirigido  implements IGrafoDirigido {
         Collection<TVertice> visitados = new ArrayList<>();
         TVertice verticeOrigen = buscarVertice(etiquetaOrigen);
         if (verticeOrigen != null) {
-            /*if (!verticeOrigen.getVisitado()){
+            if (!verticeOrigen.getVisitado()){
                 verticeOrigen.bpf(visitados);
-            }*/
-            return bpf(verticeOrigen);
+            }
+            //return bpf(verticeOrigen);
         }
         return visitados; // Devolver una lista vacía si no se encuentra el vértice
     }
@@ -230,7 +232,7 @@ public class TGrafoDirigido  implements IGrafoDirigido {
         // Nuevo método para completar la visita de los vértices que aún no han sido visitados
         Collection<TVertice> visitados = bpf(etiquetaOrigen);
         for (TVertice vertice : vertices.values()) {
-            if (!vertice.getVisitado()) {
+            if (!vertice.getVisitado() && !visitados.contains(vertice)) {
                 vertice.bpf(visitados);
             }
         }
@@ -512,7 +514,7 @@ public class TGrafoDirigido  implements IGrafoDirigido {
         Collection<TVertice> visitados = bpf();
 
         // Verificar si todos los vértices fueron visitados
-        if (visitados.size() != vertices.size()) {
+        if (visitados.size() != getVertices().size()) {
             return false;
         }
 
@@ -522,8 +524,13 @@ public class TGrafoDirigido  implements IGrafoDirigido {
         // Realizar DFS en el grafo transpuesto 
         Collection<TVertice> visitadosTranspuesto = grafoTranspuesto.bpf();
 
+        // Verificar si todos los vértices fueron visitados en la DFS trasnpuesta
+        if (visitadosTranspuesto.size() != getVertices().size()) {
+            return false;
+        }
+
         // Verificar si todos los vértices fueron visitados en el grafo transpuesto
-        return visitadosTranspuesto.size() == vertices.size();
+        return visitadosTranspuesto.size() == getVertices().size() && visitados.size() == getVertices().size() && visitadosTranspuesto.size() == visitados.size();
     }
 
     private TGrafoDirigido transponerGrafo() {
@@ -600,17 +607,43 @@ public class TGrafoDirigido  implements IGrafoDirigido {
 
     public List<TVertice> sortTopologico() {
         desvisitarVertices();
+
         Stack<TVertice> stack = new Stack<>();
+        List<TVertice> ordenTopologico = new ArrayList<>();
+        
+        if (tieneCiclo()){
+            return ordenTopologico;
+        }
+
         for (TVertice vertice : vertices.values()) {
             if (!vertice.getVisitado()) {
                 vertice.sortTopologico(stack);
             }
         }
-        List<TVertice> ordenTopologico = new ArrayList<>();
+        
         while (!stack.isEmpty()) {
             ordenTopologico.add(stack.pop());
         }
         return ordenTopologico;
+    }
+
+    public List<TVertice> obtenerSortTopologico(){
+        desvisitarVertices();
+        LinkedList<TVertice> sortTopologico = new LinkedList();
+
+        if (tieneCiclo()){
+            return sortTopologico();
+        }
+
+        TGrafoDirigido grafoTranspuesto = transponerGrafo();
+        Map<Comparable,TVertice> verticesGrafoTranspuesto = grafoTranspuesto.getVertices();
+
+        for (TVertice vertice : verticesGrafoTranspuesto.values()) {
+            if (!vertice.getVisitado()) {
+                vertice.obtenerSortTopologico(sortTopologico);
+            }
+        }
+        return sortTopologico;
     }
 
     public LinkedList<TVertice> obtenerOrdenParcial() {
@@ -618,10 +651,6 @@ public class TGrafoDirigido  implements IGrafoDirigido {
         desvisitarVertices();
         LinkedList<TVertice> orden = new LinkedList();
         
-        if (!tieneCiclo()){
-            return orden;
-        }
-
         TGrafoDirigido grafoTranspuesto = transponerGrafo();
         Map<Comparable,TVertice> verticesGrafoTranspuesto = grafoTranspuesto.getVertices();
 
@@ -637,7 +666,7 @@ public class TGrafoDirigido  implements IGrafoDirigido {
     public LinkedList<Comparable> ordenParcial() {
         TVertice aux = buscarVertice("Fin");
         LinkedList<Comparable> result = new LinkedList<>();
-        if(aux == null) return result;
+        if(aux == null ) return result;
 
         desvisitarVertices();
         TGrafoDirigido invertido = transponerGrafo();

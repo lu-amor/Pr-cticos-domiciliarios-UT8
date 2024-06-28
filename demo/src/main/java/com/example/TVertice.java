@@ -381,6 +381,24 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon{
         stack.push(this);
     }
 
+    public void obtenerSortTopologico(LinkedList<TVertice> sortTopologico){
+        if (getVisitado()) {
+            return; // Evita revisitar un vértice ya visitado
+        }
+        setVisitado(true);
+
+        for (TAdyacencia adyacente : adyacentes) {    
+            TVertice verticeDestino = adyacente.getDestino();
+            if (!verticeDestino.getVisitado()){
+                verticeDestino.obtenerOrdenParcial(sortTopologico);
+            }
+        }
+
+        if (!sortTopologico.contains(this)){
+            sortTopologico.add(this); // Agrega la tarea al inicio de la lista
+        }
+    }
+
     public void obtenerOrdenParcial(LinkedList<TVertice> orden) {
         if (getVisitado()) {
             return; // Evita revisitar un vértice ya visitado
@@ -390,14 +408,16 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon{
         // intento de agregar un marcador 
         TVertice centinela = new TVertice<>("$");
 
-
-        for (TAdyacencia adyacente : adyacentes) {    
-            TVertice verticeDestino = adyacente.getDestino();
-            if (!verticeDestino.getVisitado()){
-                verticeDestino.obtenerOrdenParcial(orden);
-                orden.add(centinela); 
+        if (adyacentes.size() == 1) {
+            adyacentes.getFirst().getDestino().ordenParcial(orden);
+        } else {
+            for (TAdyacencia adyacente : adyacentes) {    
+                TVertice verticeDestino = adyacente.getDestino();
+                if (!verticeDestino.getVisitado()){
+                    verticeDestino.obtenerOrdenParcial(orden);
+                    orden.add(centinela); 
+                }
             }
-            
         }
 
         if (!orden.contains(this)){
