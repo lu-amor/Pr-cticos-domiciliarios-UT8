@@ -217,6 +217,27 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon{
 
     @Override
     public void bea(Collection<TVertice> visitados) {
+        this.visitado = true;
+        LinkedList<TVertice> lista = new LinkedList();
+        lista.add(this);
+        visitados.add(this);
+        while(!lista.isEmpty()){
+            TVertice primero = lista.remove(0);
+            LinkedList<TAdyacencia> ady = primero.getAdyacentes();
+            for(TAdyacencia t : ady){
+                if(!t.getDestino().getVisitado()){
+                    t.getDestino().setVisitado(true);
+                    lista.add(t.getDestino());
+                    visitados.add(t.getDestino());
+                }
+            }
+        }
+    }
+
+    /*
+    nuestro
+    @Override
+    public void bea(Collection<TVertice> visitados) {
         Queue<TVertice> cola = new LinkedList<>();
         this.setVisitado(true);
         cola.add(this);
@@ -231,7 +252,7 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon{
                 }
             }
         }
-    }
+    } */
 
     /*
     @Override
@@ -301,6 +322,32 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon{
 
     @Override
     public boolean tieneCiclo(LinkedList<Comparable> camino) {
+        setVisitado(true);
+        camino.add(this.getEtiqueta());
+        boolean ciclo = false;
+        for (TAdyacencia adyacencia : this.getAdyacentes()) {
+            TVertice w = adyacencia.getDestino();
+            if (!w.getVisitado()) {
+                ciclo = w.tieneCiclo(camino);
+                if (ciclo) {
+                    break;
+                }
+            } else {
+                if (camino.contains(w.getEtiqueta())) {
+                    ciclo = true;
+                    break;
+                }
+
+            }
+
+        }
+        camino.remove(this.getEtiqueta());
+        return ciclo;
+    }
+
+    /*
+    @Override
+    public boolean tieneCiclo(LinkedList<Comparable> camino) {
         this.setVisitado(true);
         camino.add(this.getEtiqueta());
 
@@ -315,7 +362,7 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon{
         }
         camino.remove(this.getEtiqueta());
         return false;
-    }
+    }*/
 
     public boolean tieneCiclo(TCamino camino) {
         setVisitado(true);
@@ -345,6 +392,28 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon{
     }
 
     @Override
+    public boolean conectadoCon(TVertice etVertDest) {
+        this.setVisitado(true);
+        for (TAdyacencia adyacencia : this.getAdyacentes()) {
+            TVertice destino = adyacencia.getDestino();
+            if (!destino.getVisitado()) {
+                if (destino.getEtiqueta().compareTo(etVertDest) == 0) {                    
+                    return true;
+                } else {                    
+                    boolean existe =  destino.conectadoCon(etVertDest);
+                    if (existe){
+                        return existe;
+                    }
+                }                
+            }
+        }
+        this.setVisitado(false);
+        return false;
+    }
+
+    /*
+    nuestro
+    @Override
     public boolean conectadoCon(TVertice destino) {
         setVisitado(true);
         if(getEtiqueta().equals(destino.getEtiqueta())) {
@@ -359,7 +428,7 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon{
             }
         }
         return false;
-    }
+    } */
 
     public void puntosArticulacion(LinkedList<TVertice> puntos, int[] cont) {
         cont[0]++;
