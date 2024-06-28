@@ -39,7 +39,7 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
     }
 
     @Override
-    public TGrafoNoDirigido Prim() {
+    public TGrafoNoDirigido Prim() { // O(na)
         TGrafoNoDirigido arbolPrim = new TGrafoNoDirigido(this.getVertices().values(), new LinkedList<>());
         double costoTotal = 0.0d;
 
@@ -99,7 +99,7 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
     } */
 
     @Override
-    public TGrafoNoDirigido Kruskal() {
+    public TGrafoNoDirigido Kruskal() { // O(a²)
                LinkedList<TArista> aristasKruskal = new LinkedList(); //Aqui se almacenaran las aristas seleccionadas.
         Map<Comparable, TVertice> vertices = getVertices();
 
@@ -203,7 +203,7 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
             this.desvisitarVertices();
             if(this.existeVertice(etiquetaOrigen))
             {
-                TVertice vert= super.buscarVertice(etiquetaOrigen);
+                TVertice vert = super.buscarVertice(etiquetaOrigen);
                 Collection<TVertice> verts = new LinkedList<TVertice>();
                 vert.bea(verts);
                 return verts;
@@ -316,6 +316,16 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
         return new ArrayList<>();
     }
 
+    public void clasificarArcosBPF(TVertice verticeOrigen, ListaArcos arcosArbol, ListaArcos arcosRetroceso) {
+        desvisitarVertices();
+        verticeOrigen.clasificarArcosBPF(arcosArbol, arcosRetroceso);
+    }
+
+    public void clasificarArcosBEA(TVertice verticeOrigen, ListaArcos arcosArbol, ListaArcos arcosCruzados) {
+        desvisitarVertices();
+        verticeOrigen.clasificarArcosBEA(arcosArbol, arcosCruzados);
+    }
+
     @Override
     public TCamino caminoCritico() {
         // TODO Auto-generated method stub
@@ -326,16 +336,6 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
     public TCaminos obtenerCaminosNoCriticos() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'obtenerCaminosNoCriticos'");
-    }
-
-    public void clasificarArcosBPF(TVertice verticeOrigen, ListaArcos arcosArbol, ListaArcos arcosRetroceso) {
-        desvisitarVertices();
-        verticeOrigen.clasificarArcosBPF(arcosArbol, arcosRetroceso);
-    }
-
-    public void clasificarArcosBEA(TVertice verticeOrigen, ListaArcos arcosArbol, ListaArcos arcosCruzados) {
-        desvisitarVertices();
-        verticeOrigen.clasificarArcosBEA(arcosArbol, arcosCruzados);
     }
 
     @Override

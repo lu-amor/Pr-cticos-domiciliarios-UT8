@@ -338,7 +338,7 @@ public class TGrafoDirigido  implements IGrafoDirigido {
                 etiqueta_centro = etiqueta_vertice;
             }
         }
-        return etiqueta_centro+" (" + centro.toString().trim()+")";
+        return etiqueta_centro +" (" + centro.toString().trim() + ")";
     }
 
     /*
@@ -368,41 +368,45 @@ public class TGrafoDirigido  implements IGrafoDirigido {
     return centro;
     } */
 
-    public Map<Comparable, Double> dijkstra(Comparable etiquetaOrigen) {
+    public Map<Comparable, Double> dijkstra(Comparable etiquetaOrigen) { //O(n²)
         Set<TVertice> noVisitados = new HashSet<>(vertices.values());
-
         Map<Comparable, Double> distancias = new HashMap<>();
         for (TVertice vertice : vertices.values()) {
             distancias.put(vertice.getEtiqueta(), Double.POSITIVE_INFINITY);
         }
+        // Establece la distancia al vértice origen como 0
         distancias.put(etiquetaOrigen, 0.0);
-
+    
         while (!noVisitados.isEmpty()) {
             TVertice v = null;
+            // Encuentra el vértice no visitado con la distancia mínima desde el origen
             for (TVertice vertice : noVisitados) {
                 if (v == null || distancias.get(vertice.getEtiqueta()) < distancias.get(v.getEtiqueta())) {
                     v = vertice;
                 }
             }
-
+            // Marca el vértice seleccionado como visitado al removerlo del conjunto de no visitados
             noVisitados.remove(v);
-
+    
+            // Para cada adyacente del vértice seleccionado
             for (Object adyacente : v.getAdyacentes()) {
-                TVertice w = ((TAdyacencia) adyacente).getDestino();
-                double peso = ((TAdyacencia) adyacente).getCosto();
-                double distanciaHastaV = distancias.get(v.getEtiqueta());
-                double distanciaPropuesta = distanciaHastaV + peso;
+                TVertice w = ((TAdyacencia) adyacente).getDestino(); // Vértice destino de la adyacencia
+                double peso = ((TAdyacencia) adyacente).getCosto(); // Peso de la arista hacia el vértice adyacente
+                double distanciaHastaV = distancias.get(v.getEtiqueta()); // Distancia acumulada hasta v
+                double distanciaPropuesta = distanciaHastaV + peso; // Distancia propuesta pasando por v hasta w
+    
+                // Si la distancia propuesta es menor que la distancia conocida hasta w, actualiza la distancia de w
                 if (distanciaPropuesta < distancias.get(w.getEtiqueta())) {
                     distancias.put(w.getEtiqueta(), distanciaPropuesta);
                 }
             }
         }
-
+        // Retorna el mapa de distancias mínimas desde el vértice origen a todos los demás vértices
         return distancias;
     }
 
     @Override
-    public Double[][] floyd() {
+    public Double[][] floyd() { //O(n³)
         Double[][] matriz = UtilGrafos.obtenerMatrizCostos(vertices);
         for (int k = 0; k < matriz.length; k++) {
             for (int i = 0; i < matriz.length; i++) {
@@ -448,27 +452,31 @@ public class TGrafoDirigido  implements IGrafoDirigido {
     public Comparable obtenerExcentricidad(Comparable etiquetaVertice) {
         Double[][] matriz = this.floyd();
         Set<Comparable> etiquetasVertices = this.vertices.keySet();
+        // Crea un array para almacenar las etiquetas de los vértices
         Comparable[] array = new Comparable[matriz.length];
         array = etiquetasVertices.toArray(array);
         int columna = 0;
+        // Busca la columna correspondiente al vértice cuya excentricidad se quiere calcular
         for (int i = 0; i < array.length; i++) {
-            if(array[i] == etiquetaVertice){
+            if(array[i] == etiquetaVertice) {
                 columna = i;
                 break;
             }
         }
         Double ex = 0.0;
-        for (int i =0; i<matriz.length; i++){
-            if(matriz[i][columna]>ex && matriz[i][columna]<Double.MAX_VALUE && matriz[i][columna]>0.0){
+        // Recorre la columna identificada para encontrar la distancia máxima (excentricidad)
+        for (int i = 0; i < matriz.length; i++) {
+            // Se asegura de considerar solo valores válidos (distintos de infinito y mayores a cero)
+            if (matriz[i][columna] > ex && matriz[i][columna] < Double.MAX_VALUE && matriz[i][columna] > 0.0) {
                 ex = matriz[i][columna];
             }
         }
-        if (ex == 0.0){
+        // Si no se encontró una distancia válida, se asigna infinito como excentricidad
+        if (ex == 0.0) {
             ex = Double.MAX_VALUE;
         }
         return ex;
     }
-
     /*
     nuestro
     @Override
@@ -508,7 +516,7 @@ public class TGrafoDirigido  implements IGrafoDirigido {
     } */
 
     @Override
-    public boolean[][] warshall() {
+    public boolean[][] warshall() {  //O(n³)
         Double[][] matriz = UtilGrafos.obtenerMatrizCostos(getVertices());
         boolean[][] war = new boolean[matriz.length][matriz.length];
         for (int i = 0; i < matriz.length; i++) {
@@ -576,7 +584,6 @@ public class TGrafoDirigido  implements IGrafoDirigido {
 
     @Override
     public TCaminos todosLosCaminos(Comparable etiquetaOrigen, Comparable etiquetaDestino) {
-        
         TVertice v = buscarVertice(etiquetaOrigen);
         TVertice u = buscarVertice(etiquetaDestino);
         if ((v != null)&&(u != null)) {
@@ -718,9 +725,7 @@ public class TGrafoDirigido  implements IGrafoDirigido {
     }
 
     private TGrafoDirigido transponerGrafo() {
-        
         Collection<TArista> aristas = new ArrayList<TArista>();
-
         for (TVertice vertice : vertices.values()) {
             for (TAdyacencia adyacente : (Collection<TAdyacencia>) vertice.getAdyacentes()) {
                 TArista arista = new TArista(adyacente.getDestino().getEtiqueta(), vertice.getEtiqueta(), adyacente.getCosto());

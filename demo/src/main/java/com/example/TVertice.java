@@ -401,7 +401,7 @@ public class TVertice<T> implements IVertice, IVerticeKevinBacon{
                     return true;
                 } else {                    
                     boolean existe =  destino.conectadoCon(etVertDest);
-                    if (existe){
+                    if (existe) {
                         return existe;
                     }
                 }                
