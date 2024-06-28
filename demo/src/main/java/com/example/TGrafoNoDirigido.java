@@ -145,6 +145,26 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
         return puntos;
     }
 
+    /*
+     * @Override
+	public LinkedList<TVertice> puntosArticulacion(Comparable etOrigen) {
+        desvisitarVertices();
+        TVertice vertice = this.buscarVertice(etOrigen);
+        LinkedList<TVertice> puntosArticulacion = new LinkedList<>();
+        if (vertice != null) {
+            vertice.setNumBp(1);
+            return vertice.puntosArticulacion(puntosArticulacion);
+        }
+        return puntosArticulacion;
+    }
+     */
+
+    @Override
+    public boolean esConexo() {
+        Collection<TVertice> visitados = bpf();
+        return visitados.size() == getVertices().size();
+    }
+
     public Collection<TVertice> bpfNoCompleto() {
         desvisitarVertices();
         Collection<TVertice> visitados = new ArrayList<>();
@@ -198,12 +218,14 @@ public class TGrafoNoDirigido extends TGrafoDirigido implements IGrafoNoDirigido
         throw new UnsupportedOperationException("Unimplemented method 'obtenerCaminosNoCriticos'");
     }
 
-    @Override
-    public void clasificarArcos(TVertice verticeOrigen, ListaArcos arcosArbol, ListaArcos arcosRetroceso,
-            ListaArcos arcosAvance, ListaArcos arcosCruzados) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'clasificarArcos'");
-        
+    public void clasificarArcosBPF(TVertice verticeOrigen, ListaArcos arcosArbol, ListaArcos arcosRetroceso) {
+        desvisitarVertices();
+        verticeOrigen.clasificarArcosBPF(arcosArbol, arcosRetroceso);
+    }
+
+    public void clasificarArcosBEA(TVertice verticeOrigen, ListaArcos arcosArbol, ListaArcos arcosCruzados) {
+        desvisitarVertices();
+        verticeOrigen.clasificarArcosBEA(arcosArbol, arcosCruzados);
     }
 
     @Override
